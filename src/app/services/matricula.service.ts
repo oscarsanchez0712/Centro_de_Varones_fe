@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import { Matricula, crearDocumentosVacios } from '../models/matricula.model';
 
 const CLAVE_STORAGE = 'matriculas_2026';
@@ -30,6 +31,12 @@ function crearMatriculaEjemplo(numeroSolicitud: string, nombres: string, apellid
     estado: 'APROBADA',
   };
 }
+=======
+import { Matricula } from '../models/matricula.model';
+
+const CLAVE_STORAGE = 'matriculas_2026';
+const CLAVE_CONTADOR = 'matriculas_2026_contador';
+>>>>>>> 527eb82de0f7dc6166a0c8e9b03b46644470d071
 
 @Injectable({
   providedIn: 'root',
@@ -78,6 +85,7 @@ export class MatriculaService {
       return [];
     }
     const datos = localStorage.getItem(CLAVE_STORAGE);
+<<<<<<< HEAD
     let matriculas: Matricula[] = [];
     try {
       matriculas = datos ? JSON.parse(datos) as Matricula[] : [];
@@ -95,6 +103,16 @@ export class MatriculaService {
       localStorage.setItem(CLAVE_EJEMPLOS_CARGADOS, 'true');
     }
     return matriculas;
+=======
+    if (!datos) {
+      return [];
+    }
+    try {
+      return JSON.parse(datos) as Matricula[];
+    } catch {
+      return [];
+    }
+>>>>>>> 527eb82de0f7dc6166a0c8e9b03b46644470d071
   }
 
   /**
