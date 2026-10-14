@@ -1,0 +1,21 @@
+<app-navbar></app-navbar>
+<router-outlet></router-outlet>
+
+<footer class="bg-blue-900 text-white no-imprimir">
+  <div class="max-w-[1100px] mx-auto px-4 sm:px-6 py-7 grid grid-cols-1 gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
+    <div>
+      <p class="font-semibold">IEP N.&#176; 20874</p>
+      <p class="text-blue-200 text-sm">Gesti&#243;n 2026</p>
+    </div>
+
+    <nav aria-label="Accesos r&#225;pidos">
+      <p class="font-semibold text-sm mb-3">Accesos r&#225;pidos</p>
+      <div class="flex flex-wrap gap-x-5 gap-y-2 text-blue-200 text-sm">
+        <a routerLink="/" fragment="inicio" class="hover:text-white">Inicio</a>
+        <a routerLink="/" fragment="consulta" class="hover:text-white">Consultar estado</a>
+        <a routerLink="/estudiantes" class="hover:text-white">Estudiantes por grado</a>
+        <a routerLink="/notas" class="hover:text-white">Registro de notas</a>
+      </div>
+    </nav>
+  </div>
+</footer>

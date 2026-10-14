@@ -1,0 +1,46 @@
+<section id="estudiantes" class="py-12 sm:py-16 bg-white">
+  <div class="max-w-[1100px] mx-auto px-4 sm:px-6">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+      <div>
+        <p class="text-sm font-semibold text-blue-700">Gesti&#243;n acad&#233;mica</p>
+        <h2 class="text-2xl font-bold text-gray-900 mt-1">Estudiantes por grado</h2>
+        <p class="text-gray-600 mt-2">Consulta la lista de estudiantes registrados en cada grado.</p>
+      </div>
+      <label class="text-sm font-medium text-gray-700">Grado
+        <select [(ngModel)]="gradoSeleccionado" class="mt-1 block w-full sm:w-64 rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900">
+          <option value="">Todos los grados</option>
+          @for (grado of grados; track grado) {
+            <option [value]="grado">{{ grado }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="mb-3 text-sm text-gray-600">{{ estudiantes.length }} estudiante(s)</div>
+    <div class="overflow-x-auto rounded-xl border border-gray-200">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr><th class="px-4 py-3">Apellidos y nombres</th><th class="px-4 py-3">DNI</th><th class="px-4 py-3">Grado</th><th class="px-4 py-3">Estado</th></tr>
+        </thead>
+        <tbody>
+          @for (matricula of estudiantes; track matricula.numeroSolicitud) {
+            <tr class="border-t border-gray-200">
+              <td class="px-4 py-3 font-medium text-gray-900">{{ matricula.estudiante.apellidos }}, {{ matricula.estudiante.nombres }}</td>
+              <td class="px-4 py-3 text-gray-700">{{ matricula.estudiante.dni }}</td>
+              <td class="px-4 py-3 text-gray-700">{{ matricula.estudiante.grado }}</td>
+              <td class="px-4 py-3">
+                <span class="rounded-full px-2.5 py-1 text-xs font-semibold"
+                  [class.bg-green-100]="matricula.estado === 'APROBADA'" [class.text-green-700]="matricula.estado === 'APROBADA'"
+                  [class.bg-yellow-100]="matricula.estado !== 'APROBADA'" [class.text-yellow-700]="matricula.estado !== 'APROBADA'">
+                  {{ matricula.estado }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">No hay estudiantes registrados{{ gradoSeleccionado ? ' en este grado' : '' }}.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

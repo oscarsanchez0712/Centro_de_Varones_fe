@@ -1,0 +1,173 @@
+/* Estilos globales - Gestión de Matrículas 2026 */
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #eef1f5;
+  color: #172033;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+app-root > app-navbar {
+  flex: 0 0 auto;
+}
+
+app-root > router-outlet + * {
+  display: block;
+  flex: 1 0 auto;
+}
+
+app-root > footer {
+  flex: 0 0 auto;
+  margin-top: auto;
+}
+
+:root {
+  --azul-institucional: #123873;
+  --azul-accion: #2161bd;
+  --borde: #dce3ec;
+}
+
+section {
+  border-bottom: 1px solid #e1e6ed;
+}
+
+header {
+  background: var(--azul-institucional) !important;
+  box-shadow: none !important;
+}
+
+header .h-16 {
+  height: 54px !important;
+}
+
+header .font-bold {
+  font-size: 11px !important;
+  letter-spacing: .02em !important;
+}
+
+header .text-xs {
+  font-size: 8px !important;
+  color: #b9d2f5 !important;
+}
+
+main > section > div,
+main > app-comprobante > section > div {
+  max-width: 980px !important;
+}
+
+h1, h2, h3, h4, p {
+  letter-spacing: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-weight: 650;
+}
+
+h2 {
+  font-size: 20px !important;
+  line-height: 1.25 !important;
+}
+
+input, select {
+  min-height: 38px;
+  border-color: var(--borde) !important;
+  background: #fbfcfe;
+  color: #26364d;
+  font-size: 12px;
+}
+
+input:focus, select:focus {
+  border-color: var(--azul-accion) !important;
+  box-shadow: 0 0 0 2px rgba(33, 97, 189, .12) !important;
+}
+
+button, a {
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+button:not(:disabled):hover, a:hover {
+  transform: translateY(-1px);
+}
+
+footer {
+  background: var(--azul-institucional) !important;
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 12px;
+  }
+
+  main > section > div,
+  main > app-comprobante > section > div {
+    padding: 28px 16px !important;
+  }
+
+  h2 {
+    font-size: 17px !important;
+    text-align: left !important;
+    margin-bottom: 18px !important;
+  }
+}
+
+/* Barra de progreso de pasos */
+.paso-punto {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.fade-in {
+  animation: fadeIn 0.35s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Comprobante: oculto en pantalla dentro del flujo normal salvo cuando se solicita imprimir */
+.solo-impresion {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #comprobante-imprimible, #comprobante-imprimible * {
+    visibility: visible;
+  }
+
+  #comprobante-imprimible {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .solo-impresion {
+    display: block;
+  }
+
+  .no-imprimir {
+    display: none !important;
+  }
+}
