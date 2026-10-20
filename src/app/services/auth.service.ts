@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
 
 export interface Sesion {
   usuario: string;
@@ -6,27 +8,17 @@ export interface Sesion {
   rol: string;
 }
 
-interface CredencialDemo extends Sesion {
-  clave: string;
-}
+const CLAVE_SESION = 'sesion_matriculas_2026';
 
-const CLAVE_SESION = 'sesion_iep_20874';
+/** Cuentas de demostración (frontend sin backend). */
+const CUENTAS = [
+  { usuario: 'admin', clave: 'Admin2026', nombre: 'Administración', rol: 'Administrador' },
+  { usuario: 'apoderado', clave: 'Padre2026', nombre: 'Apoderado', rol: 'Apoderado' },
+];
 
-/**
- * Autenticación demostrativa del lado del cliente.
- * Al no existir backend, las credenciales viven aquí; cuando se conecte una API
- * basta con reemplazar el cuerpo de iniciarSesion() por la llamada HTTP.
- */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly usuarios: CredencialDemo[] = [
-    { usuario: 'admin', clave: 'iep20874', nombre: 'Administrador', rol: 'Administrador' },
-    { usuario: 'secretaria', clave: 'matricula2026', nombre: 'Secretaría Académica', rol: 'Secretaría' },
-  ];
-
-  sesionActual(): Sesion | null {
+  get sesion(): Sesion | null {
     if (typeof sessionStorage === 'undefined') {
       return null;
     }
@@ -38,24 +30,26 @@ export class AuthService {
     }
   }
 
-  estaAutenticado(): boolean {
-    return this.sesionActual() !== null;
+  get autenticado(): boolean {
+    return this.sesion !== null;
   }
 
   iniciarSesion(usuario: string, clave: string): boolean {
-    const valor = usuario.trim().toLowerCase();
-    const encontrado = this.usuarios.find((u) => u.usuario === valor && u.clave === clave);
-    if (!encontrado || typeof sessionStorage === 'undefined') {
+    const cuenta = CUENTAS.find((c) => c.usuario === usuario.trim().toLowerCase() && c.clave === clave);
+    if (!cuenta) {
       return false;
     }
-    const { clave: _omitida, ...sesion } = encontrado;
+    const sesion: Sesion = { usuario: cuenta.usuario, nombre: cuenta.nombre, rol: cuenta.rol };
     sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
     return true;
   }
 
   cerrarSesion(): void {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.removeItem(CLAVE_SESION);
-    }
+    sessionStorage.removeItem(CLAVE_SESION);
   }
 }
+
+export const authGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.autenticado ? true : inject(Router).createUrlTree(['/login']);
+};

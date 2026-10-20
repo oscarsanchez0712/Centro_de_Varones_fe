@@ -1,19 +1,24 @@
-<section id="requisitos" class="bg-white">
-  <div class="max-w-[1100px] mx-auto px-4 sm:px-6 py-14">
-    <h2 class="text-2xl sm:text-3xl font-bold text-blue-900 text-center mb-10">Requisitos para matrícula</h2>
+<section id="requisitos" class="rq">
+  <div class="rq-wrap">
+    <div class="rq-cabecera">
+      <div>
+        <h2>Requisitos para matrícula</h2>
+        <p class="rq-sub">Marca los documentos que ya tienes a la mano.</p>
+      </div>
+      <div class="rq-avance" aria-live="polite">
+        <strong>{{ listos.size }} de {{ requisitos.length }} listos</strong>
+        <div class="rq-barra"><span [style.width.%]="porcentaje"></span></div>
+        @if (listos.size === requisitos.length) { <em class="rq-listo">¡Todo listo para matricular!</em> }
+      </div>
+    </div>
 
-    <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
+    <div class="rq-grid">
       @for (r of requisitos; track r.titulo) {
-        <div class="bg-gray-50 rounded-2xl border border-gray-100 p-5 flex gap-4 items-start hover:shadow-sm transition-shadow">
-          <div class="text-2xl shrink-0">{{ r.icono }}</div>
-          <div class="flex-1">
-            <div class="flex items-center gap-2">
-              <span class="text-green-600 font-bold">✓</span>
-              <h3 class="font-semibold text-blue-900">{{ r.titulo }}</h3>
-            </div>
-            <p class="text-gray-600 text-sm mt-1">{{ r.descripcion }}</p>
-          </div>
-        </div>
+        <button type="button" class="rq-card" [class.on]="listos.has(r.titulo)" [attr.aria-pressed]="listos.has(r.titulo)" (click)="alternar(r.titulo)">
+          <span class="rq-icono"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="r.d"/></svg></span>
+          <span class="rq-texto"><b>{{ r.titulo }}</b><small>{{ r.descripcion }}</small></span>
+          <span class="rq-check" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+        </button>
       }
     </div>
   </div>

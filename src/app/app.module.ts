@@ -15,6 +15,7 @@ import { ComprobanteComponent } from './components/comprobante/comprobante.compo
 import { EstudiantesCursoComponent } from './components/estudiantes-curso/estudiantes-curso.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { RegistroNotasComponent } from './components/registro-notas/registro-notas.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { RegistroNotasComponent } from './components/registro-notas/registro-not
     EstudiantesCursoComponent,
     HomePageComponent,
     RegistroNotasComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

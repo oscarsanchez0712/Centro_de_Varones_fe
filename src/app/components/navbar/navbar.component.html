@@ -1,45 +1,37 @@
-<header class="bg-blue-900 text-white sticky top-0 z-50 shadow-md no-imprimir">
-  <div class="max-w-[1100px] mx-auto px-4 sm:px-6">
-    <div class="flex items-center justify-between h-16">
-      <div class="flex items-center gap-3">
-        <img src="/logo.jpg" alt="Logo de la institución" class="h-11 w-11 rounded-full object-contain bg-white p-0.5" />
-        <div class="flex flex-col leading-tight">
-          <span class="font-bold text-sm sm:text-base tracking-wide">IEP N.° 20874</span>
-          <span class="text-xs sm:text-sm text-blue-200">Gestión 2026</span>
-        </div>
-      </div>
+<header class="nav no-imprimir">
+  <div class="nav-barra">
+    <a routerLink="/" fragment="inicio" class="nav-marca" (click)="cerrarMenu()">
+      <img src="logo.jpg" alt="Escudo de la institución" class="nav-escudo">
+      <span class="nav-textos">
+        <span class="nav-nombre">IEP N.° 20874</span>
+        <span class="nav-gestion">Gestión 2026</span>
+      </span>
+    </a>
 
-      <!-- Navegación en PC -->
-      <nav aria-label="Navegación principal" class="hidden md:flex items-center gap-6 text-sm font-medium">
-        <a routerLink="/" fragment="inicio" (click)="cerrarMenu()" class="hover:text-blue-200 transition-colors">Inicio</a>
-        <a routerLink="/estudiantes" (click)="cerrarMenu()" class="hover:text-blue-200 transition-colors">Estudiantes</a>
-        <a routerLink="/notas" (click)="cerrarMenu()" class="hover:text-blue-200 transition-colors">Notas</a>
-        <a routerLink="/" fragment="consulta" (click)="cerrarMenu()"
-           class="bg-blue-600 hover:bg-blue-500 transition-colors px-4 py-2 rounded-full">
-          Consultar estado
-        </a>
-      </nav>
+    <nav aria-label="Navegación principal" class="nav-enlaces">
+      <a routerLink="/" fragment="inicio" (click)="cerrarMenu()">Inicio</a>
+      <a routerLink="/estudiantes" (click)="cerrarMenu()">Estudiantes</a>
+      <a routerLink="/notas" (click)="cerrarMenu()">Notas</a>
+      <a routerLink="/" fragment="consulta" (click)="cerrarMenu()" class="nav-cta">Consultar estado</a>
+      <span class="nav-usuario">
+        <span class="nav-avatar" aria-hidden="true">{{ auth.sesion?.nombre?.charAt(0) }}</span>
+        <span class="nav-usuario-datos"><strong>{{ auth.sesion?.nombre }}</strong><small>{{ auth.sesion?.rol }}</small></span>
+        <button type="button" (click)="cerrarSesion()" class="nav-salir">Salir</button>
+      </span>
+    </nav>
 
-      <!-- Botón hamburguesa -->
-      <button type="button" (click)="toggleMenu()"
-              class="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5"
-              aria-label="Abrir menú">
-        <span class="block w-6 h-0.5 bg-white transition-transform"
-              [class.rotate-45]="menuAbierto" [class.translate-y-2]="menuAbierto"></span>
-        <span class="block w-6 h-0.5 bg-white transition-opacity" [class.opacity-0]="menuAbierto"></span>
-        <span class="block w-6 h-0.5 bg-white transition-transform"
-              [class.-rotate-45]="menuAbierto" [class.-translate-y-2]="menuAbierto"></span>
-      </button>
-    </div>
-
-    <!-- Menú móvil -->
-    @if (menuAbierto) {
-      <nav aria-label="Navegación móvil" class="md:hidden flex flex-col gap-1 pb-4 fade-in text-sm font-medium">
-        <a routerLink="/" fragment="inicio" (click)="cerrarMenu()" class="py-2 px-2 rounded hover:bg-blue-800">Inicio</a>
-        <a routerLink="/estudiantes" (click)="cerrarMenu()" class="py-2 px-2 rounded hover:bg-blue-800">Estudiantes</a>
-        <a routerLink="/notas" (click)="cerrarMenu()" class="py-2 px-2 rounded hover:bg-blue-800">Notas</a>
-        <a routerLink="/" fragment="consulta" (click)="cerrarMenu()" class="py-2 px-2 rounded bg-blue-600 text-center">Consultar estado</a>
-      </nav>
-    }
+    <button type="button" (click)="toggleMenu()" class="nav-burger" aria-label="Abrir menú" [attr.aria-expanded]="menuAbierto">
+      <span></span><span></span><span></span>
+    </button>
   </div>
+
+  @if (menuAbierto) {
+    <nav aria-label="Navegación móvil" class="nav-movil fade-in">
+      <a routerLink="/" fragment="inicio" (click)="cerrarMenu()">Inicio</a>
+      <a routerLink="/estudiantes" (click)="cerrarMenu()">Estudiantes</a>
+      <a routerLink="/notas" (click)="cerrarMenu()">Notas</a>
+      <a routerLink="/" fragment="consulta" (click)="cerrarMenu()" class="nav-cta">Consultar estado</a>
+      <button type="button" (click)="cerrarSesion()" class="nav-salir">Cerrar sesión ({{ auth.sesion?.nombre }})</button>
+    </nav>
+  }
 </header>

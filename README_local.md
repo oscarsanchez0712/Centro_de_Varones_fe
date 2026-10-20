@@ -76,3 +76,7 @@ http://localhost:4200/
 - El botón **"Simular aprobación"** es solo para fines demostrativos del flujo frontend.
 - El comprobante puede imprimirse con el botón **"🖨 Imprimir comprobante"** (usa `window.print()`
   y estilos `@media print` que ocultan el resto de la página).
+
+## Inicio de sesión (demo)
+- Administrador: `admin` / `Admin2026`
+- Apoderado: `apoderado` / `Padre2026`

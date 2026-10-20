@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Matricula } from './models/matricula.model';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,6 @@ import { Matricula } from './models/matricula.model';
 })
 export class AppComponent {
   title = 'Gestión de Matrículas 2026';
-  matriculaConsultada: Matricula | null = null;
 
-  onMatriculaEncontrada(matricula: Matricula | null): void {
-    this.matriculaConsultada = matricula;
-  }
+  constructor(public auth: AuthService) {}
 }

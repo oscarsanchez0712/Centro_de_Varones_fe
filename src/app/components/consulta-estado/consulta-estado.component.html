@@ -1,75 +1,37 @@
-<section id="consulta" class="bg-white">
-  <div class="max-w-[1100px] mx-auto px-4 sm:px-6 py-14">
-    <h2 class="text-2xl sm:text-3xl font-bold text-blue-900 text-center mb-8">
-      Consulta el estado de tu matrícula
-    </h2>
-
-    <div class="max-w-xl mx-auto bg-gray-50 rounded-2xl border border-gray-100 p-6 sm:p-8">
-      <div class="flex gap-2 mb-4">
-        <button type="button" (click)="seleccionarTipo('solicitud')"
-                class="flex-1 py-2 rounded-lg text-sm font-medium transition-colors"
-                [class.bg-blue-600]="tipoBusqueda === 'solicitud'"
-                [class.text-white]="tipoBusqueda === 'solicitud'"
-                [class.bg-white]="tipoBusqueda !== 'solicitud'"
-                [class.text-gray-600]="tipoBusqueda !== 'solicitud'"
-                [class.border]="tipoBusqueda !== 'solicitud'">
-          Por número de solicitud
-        </button>
-        <button type="button" (click)="seleccionarTipo('dni')"
-                class="flex-1 py-2 rounded-lg text-sm font-medium transition-colors"
-                [class.bg-blue-600]="tipoBusqueda === 'dni'"
-                [class.text-white]="tipoBusqueda === 'dni'"
-                [class.bg-white]="tipoBusqueda !== 'dni'"
-                [class.text-gray-600]="tipoBusqueda !== 'dni'"
-                [class.border]="tipoBusqueda !== 'dni'">
-          Por DNI
-        </button>
+<section id="consulta" class="ce">
+  <div class="ce-wrap">
+    <h2>Consulta el estado de tu matrícula</h2>
+    <div class="ce-card">
+      <div class="ce-tabs" role="tablist">
+        <button type="button" role="tab" [attr.aria-selected]="tipoBusqueda === 'solicitud'" [class.on]="tipoBusqueda === 'solicitud'" (click)="seleccionarTipo('solicitud')">Por número de solicitud</button>
+        <button type="button" role="tab" [attr.aria-selected]="tipoBusqueda === 'dni'" [class.on]="tipoBusqueda === 'dni'" (click)="seleccionarTipo('dni')">Por DNI</button>
+      </div>
+      <div class="ce-fila">
+        <input id="busqueda-matricula" aria-label="Número de solicitud o DNI" type="text" [(ngModel)]="valorBusqueda"
+               [attr.inputmode]="tipoBusqueda === 'dni' ? 'numeric' : 'text'" [maxlength]="tipoBusqueda === 'dni' ? 8 : 20"
+               (input)="limpiarBusqueda($event)" (keyup.enter)="consultar()"
+               [placeholder]="tipoBusqueda === 'solicitud' ? 'Ej. MAT-2026-000125' : 'Ej. 12345678'">
+        <button type="button" class="ce-btn" (click)="consultar()">Consultar</button>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-2 mb-2">
-        <input id="busqueda-matricula" aria-label="Número de solicitud o DNI" type="text" [(ngModel)]="valorBusqueda" [attr.inputmode]="tipoBusqueda === 'dni' ? 'numeric' : 'text'"
-           [maxlength]="tipoBusqueda === 'dni' ? 8 : 20"
-           (input)="limpiarBusqueda($event)"
-               [placeholder]="tipoBusqueda === 'solicitud' ? 'Ej. MAT-2026-000125' : 'Ej. 12345678'"
-               class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <button type="button" (click)="consultar()"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors">
-          Consultar
-        </button>
-      </div>
-
-      @if (buscoAlMenosUnaVez && !matricula) {
-        <p class="text-red-600 text-sm mt-4 text-center">No se encontró ninguna matrícula con ese dato.</p>
-      }
+      @if (buscoAlMenosUnaVez && !matricula) { <p class="ce-nada" role="alert">No se encontró ninguna matrícula con ese dato.</p> }
 
       @if (matricula) {
-        <div class="mt-6 bg-white rounded-xl border border-gray-200 p-5 fade-in">
-          <div class="flex justify-between items-start mb-3">
-            <div>
-              <p class="text-xs text-gray-500">N.° de solicitud</p>
-              <p class="font-bold text-blue-900">{{ matricula.numeroSolicitud }}</p>
-            </div>
-            @if (matricula.estado === 'EN REVISIÓN') {
-              <span class="bg-yellow-100 text-yellow-700 font-semibold px-3 py-1 rounded-full text-xs whitespace-nowrap">
-                ● EN REVISIÓN
-              </span>
-            } @else {
-              <span class="bg-green-100 text-green-700 font-semibold px-3 py-1 rounded-full text-xs whitespace-nowrap">
-                ✓ APROBADA
-              </span>
-            }
+        <div class="ce-res">
+          <div class="ce-top">
+            <div><small>N.° de solicitud</small><strong>{{ matricula.numeroSolicitud }}</strong></div>
+            <span class="ce-estado" [class.ap]="matricula.estado === 'APROBADA'">{{ matricula.estado === 'APROBADA' ? 'Aprobada' : 'En revisión' }}</span>
           </div>
+          <p class="ce-dato"><b>{{ matricula.estudiante.nombres }} {{ matricula.estudiante.apellidos }}</b> · {{ matricula.estudiante.grado }} · {{ matricula.fecha }}</p>
 
-          <div class="grid sm:grid-cols-2 gap-2 text-sm text-gray-700 mb-4">
-            <p><span class="text-gray-500">Estudiante:</span> {{ matricula.estudiante.nombres }} {{ matricula.estudiante.apellidos }}</p>
-            <p><span class="text-gray-500">Fecha:</span> {{ matricula.fecha }}</p>
-          </div>
+          <ol class="ce-linea">
+            <li class="hecho"><span>✓</span><b>Recibida</b><small>{{ matricula.fecha }}</small></li>
+            <li [class.hecho]="matricula.estado === 'APROBADA'" [class.actual]="matricula.estado !== 'APROBADA'"><span>{{ matricula.estado === 'APROBADA' ? '✓' : '2' }}</span><b>En revisión</b><small>Verificación de documentos</small></li>
+            <li [class.hecho]="matricula.estado === 'APROBADA'"><span>{{ matricula.estado === 'APROBADA' ? '✓' : '3' }}</span><b>Aprobada</b><small>Matrícula confirmada</small></li>
+          </ol>
 
           @if (matricula.estado === 'EN REVISIÓN') {
-            <button type="button" (click)="simularAprobacion()"
-                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2.5 rounded-lg transition-colors text-sm">
-              Simular aprobación
-            </button>
+            <button type="button" class="ce-sim" (click)="simularAprobacion()">Simular aprobación</button>
           }
         </div>
       }
