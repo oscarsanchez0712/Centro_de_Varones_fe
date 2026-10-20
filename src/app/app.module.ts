@@ -12,12 +12,9 @@ import { RequisitosComponent } from './components/requisitos/requisitos.componen
 import { ProcesoMatriculaComponent } from './components/proceso-matricula/proceso-matricula.component';
 import { ConsultaEstadoComponent } from './components/consulta-estado/consulta-estado.component';
 import { ComprobanteComponent } from './components/comprobante/comprobante.component';
-<<<<<<< HEAD
 import { EstudiantesCursoComponent } from './components/estudiantes-curso/estudiantes-curso.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { RegistroNotasComponent } from './components/registro-notas/registro-notas.component';
-=======
->>>>>>> 527eb82de0f7dc6166a0c8e9b03b46644470d071
 
 @NgModule({
   declarations: [
@@ -29,12 +26,9 @@ import { RegistroNotasComponent } from './components/registro-notas/registro-not
     ProcesoMatriculaComponent,
     ConsultaEstadoComponent,
     ComprobanteComponent,
-<<<<<<< HEAD
     EstudiantesCursoComponent,
     HomePageComponent,
     RegistroNotasComponent,
-=======
->>>>>>> 527eb82de0f7dc6166a0c8e9b03b46644470d071
   ],
   imports: [
     BrowserModule,

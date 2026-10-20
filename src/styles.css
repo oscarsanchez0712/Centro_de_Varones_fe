@@ -16,7 +16,6 @@ body {
   line-height: 1.45;
 }
 
-<<<<<<< HEAD
 app-root {
   min-height: 100vh;
   display: flex;
@@ -37,8 +36,6 @@ app-root > footer {
   margin-top: auto;
 }
 
-=======
->>>>>>> 527eb82de0f7dc6166a0c8e9b03b46644470d071
 :root {
   --azul-institucional: #123873;
   --azul-accion: #2161bd;
