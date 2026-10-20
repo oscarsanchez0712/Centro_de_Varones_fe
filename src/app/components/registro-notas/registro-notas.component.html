@@ -1,0 +1,70 @@
+<div class="page-head">
+  <div class="container-x">
+    <div>
+      <span class="eyebrow">Gesti&#243;n acad&#233;mica</span>
+      <h1 class="page-title">Registro de notas</h1>
+      <p class="page-sub">Notas de ejemplo para demostraci&#243;n; puedes agregar o eliminar registros.</p>
+    </div>
+    <div class="field" style="min-width: 240px;">
+      <label for="filtro-notas" class="label">Filtrar por grado</label>
+      <select id="filtro-notas" [(ngModel)]="gradoSeleccionado" class="select">
+        <option value="">Todos los grados</option>
+        @for (gradoItem of grados; track gradoItem) {
+          <option [value]="gradoItem">{{ gradoItem }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="container-x">
+    <form (ngSubmit)="agregarNota()" class="card notas-form">
+      <div class="field">
+        <label for="nota-estudiante" class="label">Estudiante</label>
+        <select id="nota-estudiante" name="dniEstudiante" [(ngModel)]="dniEstudiante" required class="select">
+          <option value="" disabled>Selecciona un estudiante</option>
+          @for (matricula of matriculas; track matricula.numeroSolicitud) {
+            <option [value]="matricula.estudiante.dni">{{ matricula.estudiante.apellidos }}, {{ matricula.estudiante.nombres }} — {{ matricula.estudiante.grado }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="nota-curso" class="label">Curso</label>
+        <input id="nota-curso" name="curso" [(ngModel)]="curso" required maxlength="60" placeholder="Ej. Matemática" class="input" />
+      </div>
+      <div class="field">
+        <label for="nota-valor" class="label">Nota (0–20)</label>
+        <input id="nota-valor" name="nota" [(ngModel)]="nota" required type="number" min="0" max="20" step="0.5" placeholder="0–20" class="input" />
+      </div>
+      <button type="submit" class="btn btn-primary">Agregar nota</button>
+    </form>
+
+    <p class="counter">{{ notasFiltradas.length }} registro(s)</p>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Estudiante</th><th>Grado</th><th>Curso</th><th>Nota</th><th>Estado</th><th>Acci&#243;n</th></tr>
+        </thead>
+        <tbody>
+          @for (registro of notasFiltradas; track registro.id) {
+            <tr>
+              <td class="strong">{{ obtenerMatricula(registro.dni)?.estudiante?.apellidos }}, {{ obtenerMatricula(registro.dni)?.estudiante?.nombres }}</td>
+              <td>{{ obtenerMatricula(registro.dni)?.estudiante?.grado }}</td>
+              <td>{{ registro.curso }}</td>
+              <td class="nota" [class.nota-bad]="registro.nota < 13" [class.nota-ok]="registro.nota >= 13">{{ registro.nota }}</td>
+              <td>
+                <span class="badge" [class.badge-bad]="registro.nota < 13" [class.badge-ok]="registro.nota >= 13">
+                  {{ registro.nota >= 13 ? 'Aprobado' : 'Desaprobado' }}
+                </span>
+              </td>
+              <td><button type="button" (click)="eliminarNota(registro.id)" class="link-del">Eliminar</button></td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="table-empty">No hay notas en este grado.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>

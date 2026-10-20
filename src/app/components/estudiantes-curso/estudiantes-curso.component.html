@@ -1,0 +1,47 @@
+<div class="page-head">
+  <div class="container-x">
+    <div>
+      <span class="eyebrow">Gesti&#243;n acad&#233;mica</span>
+      <h1 class="page-title">Estudiantes por grado</h1>
+      <p class="page-sub">Consulta la lista de estudiantes registrados en cada grado.</p>
+    </div>
+    <div class="field" style="min-width: 240px;">
+      <label for="filtro-grado" class="label">Grado</label>
+      <select id="filtro-grado" [(ngModel)]="gradoSeleccionado" class="select">
+        <option value="">Todos los grados</option>
+        @for (grado of grados; track grado) {
+          <option [value]="grado">{{ grado }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
+
+<section id="estudiantes" class="page-body">
+  <div class="container-x">
+    <p class="counter">{{ estudiantes.length }} estudiante(s)</p>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Apellidos y nombres</th><th>DNI</th><th>Grado</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          @for (matricula of estudiantes; track matricula.numeroSolicitud) {
+            <tr>
+              <td class="strong">{{ matricula.estudiante.apellidos }}, {{ matricula.estudiante.nombres }}</td>
+              <td>{{ matricula.estudiante.dni }}</td>
+              <td>{{ matricula.estudiante.grado }}</td>
+              <td>
+                <span class="badge" [class.badge-ok]="matricula.estado === 'APROBADA'" [class.badge-warn]="matricula.estado !== 'APROBADA'">
+                  {{ matricula.estado }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="table-empty">No hay estudiantes registrados{{ gradoSeleccionado ? ' en este grado' : '' }}.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

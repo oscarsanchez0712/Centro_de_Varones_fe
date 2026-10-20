@@ -1,0 +1,11 @@
+:host { display: block; }
+.req-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.req { display: flex; gap: 16px; align-items: flex-start; padding: 22px; }
+.req h3 { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.req p { color: var(--muted); font-size: 14px; }
+.check {
+  width: 18px; height: 18px; border-radius: 50%; background: var(--green-100); color: var(--green-600);
+  display: inline-grid; place-items: center; font-size: 11px; font-weight: 800; flex: 0 0 auto;
+}
+@media (max-width: 960px) { .req-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .req-grid { grid-template-columns: 1fr; } }

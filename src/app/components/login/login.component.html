@@ -1,0 +1,75 @@
+<main class="login">
+  <!-- Panel institucional -->
+  <aside class="login-brand">
+    <div class="login-brand-inner">
+      <img src="/logo.jpg" alt="Escudo de la IEP N.&#176; 20874" class="login-logo">
+      <p class="login-eyebrow">Gesti&#243;n 2026</p>
+      <h1>IEP N.&#176; 20874</h1>
+      <p class="login-lead">
+        Portal de matr&#237;culas, seguimiento de estudiantes y registro de notas de la instituci&#243;n.
+      </p>
+
+      <ul class="login-features">
+        <li><span>&#10003;</span> Registro de matr&#237;cula en l&#237;nea</li>
+        <li><span>&#10003;</span> Consulta de estado por solicitud o DNI</li>
+        <li><span>&#10003;</span> Lista de estudiantes por grado</li>
+        <li><span>&#10003;</span> Registro y control de notas</li>
+      </ul>
+    </div>
+    <p class="login-copy">&#169; {{ anioActual }} IEP N.&#176; 20874 &middot; San Vicente, Ca&#241;ete</p>
+  </aside>
+
+  <!-- Formulario -->
+  <section class="login-panel">
+    <div class="login-card fade-in">
+      <img src="/logo.jpg" alt="" class="login-logo-mobile" aria-hidden="true">
+      <h2>Iniciar sesi&#243;n</h2>
+      <p class="login-sub">Ingresa tus credenciales para acceder al sistema.</p>
+
+      <form [formGroup]="form" (ngSubmit)="ingresar()" novalidate>
+        <div class="field">
+          <label for="login-usuario" class="label">Usuario</label>
+          <input id="login-usuario" type="text" formControlName="usuario" class="input"
+                 autocomplete="username" placeholder="Ej. admin" autofocus
+                 [attr.aria-invalid]="campoInvalido('usuario')">
+          @if (campoInvalido('usuario')) {
+            <p class="error">Ingresa tu usuario.</p>
+          }
+        </div>
+
+        <div class="field">
+          <label for="login-clave" class="label">Contrase&#241;a</label>
+          <div class="clave-wrap">
+            <input id="login-clave" [type]="verClave ? 'text' : 'password'" formControlName="clave" class="input"
+                   autocomplete="current-password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
+                   [attr.aria-invalid]="campoInvalido('clave')">
+            <button type="button" class="ver-clave" (click)="verClave = !verClave"
+                    [attr.aria-label]="verClave ? 'Ocultar contrase&#241;a' : 'Mostrar contrase&#241;a'">
+              {{ verClave ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+          @if (campoInvalido('clave')) {
+            <p class="error">Ingresa tu contrase&#241;a (m&#237;nimo 4 caracteres).</p>
+          }
+        </div>
+
+        @if (error) {
+          <div class="login-error" role="alert">{{ error }}</div>
+        }
+
+        <button type="submit" class="btn btn-primary btn-block login-submit" [disabled]="cargando">
+          @if (cargando) {
+            <span class="spinner" aria-hidden="true"></span> Verificando...
+          } @else {
+            Ingresar al sistema
+          }
+        </button>
+      </form>
+
+      <div class="login-demo">
+        <strong>Acceso de demostraci&#243;n</strong>
+        <span>Usuario: <code>admin</code> &middot; Contrase&#241;a: <code>iep20874</code></span>
+      </div>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,8 @@
+<main>
+  <app-hero></app-hero>
+  <app-como-funciona></app-como-funciona>
+  <app-requisitos></app-requisitos>
+  <app-proceso-matricula></app-proceso-matricula>
+  <app-consulta-estado (matriculaEncontrada)="onMatriculaEncontrada($event)"></app-consulta-estado>
+  <app-comprobante [matricula]="matriculaConsultada"></app-comprobante>
+</main>

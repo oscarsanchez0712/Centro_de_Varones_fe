@@ -1,0 +1,21 @@
+:host { display: block; }
+.consulta-wrap { max-width: 720px; }
+.consulta-card { padding: 28px; box-shadow: var(--shadow-md); }
+.tabs { display: flex; gap: 4px; padding: 4px; background: #eef2f7; border-radius: 10px; margin-bottom: 18px; }
+.tab { flex: 1; padding: 10px 12px; border: 0; background: transparent; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--muted); transition: all .18s ease; }
+.tab:hover { color: var(--navy-900); }
+.tab.on { background: #fff; color: var(--blue-600); box-shadow: var(--shadow-sm); }
+.busqueda { display: flex; gap: 10px; }
+.busqueda .input { flex: 1; }
+.no-result { margin-top: 18px; padding: 12px 14px; border-radius: 10px; background: var(--red-100); color: #991b1b; font-size: 14px; text-align: center; }
+.resultado { margin-top: 22px; padding: 20px; border: 1px solid var(--line); border-left: 4px solid var(--blue-600); border-radius: 10px; background: #fbfcfe; }
+.resultado-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.r-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.r-num { font-size: 20px; font-weight: 800; color: var(--navy-900); }
+.r-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; font-size: 14px; color: var(--ink); font-weight: 500; }
+.r-grid .k { display: block; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+@media (max-width: 640px) {
+  .consulta-card { padding: 18px 14px; }
+  .busqueda { flex-direction: column; }
+  .r-grid { grid-template-columns: 1fr; }
+}

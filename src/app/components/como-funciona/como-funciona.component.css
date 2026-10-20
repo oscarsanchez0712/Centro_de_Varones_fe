@@ -1,0 +1,8 @@
+:host { display: block; }
+.pasos-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.paso { padding: 26px; }
+.paso-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.paso-num { font-size: 40px; font-weight: 800; line-height: 1; color: var(--blue-100); letter-spacing: -.03em; }
+.paso h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.paso p { color: var(--muted); font-size: 14px; }
+@media (max-width: 760px) { .pasos-grid { grid-template-columns: 1fr; } }

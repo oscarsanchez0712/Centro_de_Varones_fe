@@ -1,0 +1,21 @@
+<section id="requisitos" class="section section-white">
+  <div class="container-x">
+    <div class="section-head">
+      <span class="eyebrow">Documentaci&#243;n</span>
+      <h2 class="section-title">Requisitos para matr&#237;cula</h2>
+      <p class="section-sub">Prepara estos documentos antes de iniciar el registro para completar el proceso sin interrupciones.</p>
+    </div>
+
+    <div class="req-grid">
+      @for (r of requisitos; track r.titulo) {
+        <article class="card card-hover req">
+          <div class="icon-box">{{ r.icono }}</div>
+          <div>
+            <h3><span class="check" aria-hidden="true">&#10003;</span>{{ r.titulo }}</h3>
+            <p>{{ r.descripcion }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

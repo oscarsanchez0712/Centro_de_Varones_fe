@@ -1,0 +1,61 @@
+<header class="no-imprimir">
+  <div class="topbar">
+    <div class="container-x">
+      <span>Portal de matr&#237;culas &middot; <strong>Gesti&#243;n 2026</strong></span>
+      <span class="topbar-right">Instituci&#243;n Educativa N.&#176; 20874</span>
+    </div>
+  </div>
+
+  <div class="navbar">
+    <div class="container-x">
+      <div class="navbar-inner">
+        <a routerLink="/" fragment="inicio" (click)="cerrarMenu()" class="brand" aria-label="Ir al inicio">
+          <img src="/logo.jpg" alt="Escudo de la instituci&#243;n">
+          <span class="brand-text">
+            <strong>IEP N.&#176; 20874</strong>
+            <small>Gesti&#243;n 2026</small>
+          </span>
+        </a>
+
+        <!-- Navegación en PC -->
+        <nav aria-label="Navegaci&#243;n principal" class="nav-desktop">
+          <a routerLink="/" fragment="inicio" class="nav-link">Inicio</a>
+          <a routerLink="/estudiantes" routerLinkActive="active" class="nav-link">Estudiantes</a>
+          <a routerLink="/notas" routerLinkActive="active" class="nav-link">Notas</a>
+          <a routerLink="/" fragment="consulta" class="btn btn-primary btn-sm nav-cta">Consultar estado</a>
+
+          @if (sesion) {
+            <div class="user-box">
+              <div class="avatar" aria-hidden="true">{{ sesion.nombre.charAt(0) }}</div>
+              <div class="user-meta">
+                <span>{{ sesion.nombre }}</span>
+                <small>{{ sesion.rol }}</small>
+              </div>
+              <button type="button" class="logout" (click)="cerrarSesion()">Salir</button>
+            </div>
+          }
+        </nav>
+
+        <!-- Botón hamburguesa -->
+        <button type="button" (click)="toggleMenu()" class="burger" aria-label="Abrir men&#250;" [attr.aria-expanded]="menuAbierto">
+          <span [class.abierto-1]="menuAbierto"></span>
+          <span [class.abierto-2]="menuAbierto"></span>
+          <span [class.abierto-3]="menuAbierto"></span>
+        </button>
+      </div>
+
+      <!-- Menú móvil -->
+      @if (menuAbierto) {
+        <nav aria-label="Navegaci&#243;n m&#243;vil" class="nav-mobile fade-in">
+          <a routerLink="/" fragment="inicio" (click)="cerrarMenu()" class="nav-link">Inicio</a>
+          <a routerLink="/estudiantes" routerLinkActive="active" (click)="cerrarMenu()" class="nav-link">Estudiantes</a>
+          <a routerLink="/notas" routerLinkActive="active" (click)="cerrarMenu()" class="nav-link">Notas</a>
+          <a routerLink="/" fragment="consulta" (click)="cerrarMenu()" class="btn btn-primary">Consultar estado</a>
+          @if (sesion) {
+            <button type="button" class="btn btn-ghost-light" (click)="cerrarSesion()">Cerrar sesi&#243;n ({{ sesion.nombre }})</button>
+          }
+        </nav>
+      }
+    </div>
+  </div>
+</header>

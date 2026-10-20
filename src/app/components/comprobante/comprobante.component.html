@@ -1,0 +1,45 @@
+@if (matricula && matricula.estado === 'APROBADA') {
+  <section id="comprobante" class="section section-alt">
+    <div class="container-x comp-wrap">
+      <div class="section-head no-imprimir">
+        <span class="eyebrow">Documento</span>
+        <h2 class="section-title">Comprobante oficial</h2>
+      </div>
+
+      <div id="comprobante-imprimible" class="card comp fade-in">
+        <div class="comp-head">
+          <img src="/logo.jpg" alt="Escudo de la instituci&#243;n" class="comp-logo">
+          <div>
+            <p class="comp-inst">IEP N.&#176; 20874 &mdash; GESTI&#211;N 2026</p>
+            <h3>COMPROBANTE OFICIAL</h3>
+            <p class="comp-sub">Constancia de matr&#237;cula</p>
+          </div>
+        </div>
+
+        <div class="comp-block">
+          <h4>Datos del estudiante</h4>
+          <p><span class="k">Nombre</span>{{ matricula.estudiante.nombres }}</p>
+          <p><span class="k">Apellidos</span>{{ matricula.estudiante.apellidos }}</p>
+          <p><span class="k">DNI</span>{{ matricula.estudiante.dni }}</p>
+          <p><span class="k">Grado</span>{{ matricula.estudiante.grado }}</p>
+        </div>
+
+        <div class="comp-block">
+          <h4>Datos del apoderado</h4>
+          <p><span class="k">Nombre</span>{{ matricula.apoderado.nombreCompleto }}</p>
+          <p><span class="k">DNI</span>{{ matricula.apoderado.dni }}</p>
+          <p><span class="k">Parentesco</span>{{ matricula.apoderado.parentesco }}</p>
+        </div>
+
+        <div class="comp-block">
+          <h4>Datos de matr&#237;cula</h4>
+          <p><span class="k">N.&#176; de solicitud</span>{{ matricula.numeroSolicitud }}</p>
+          <p><span class="k">Fecha</span>{{ matricula.fecha }}</p>
+          <p><span class="k">Estado</span><span class="badge badge-ok">&#10003; APROBADA</span></p>
+        </div>
+
+        <button type="button" (click)="imprimir()" class="no-imprimir btn btn-primary btn-block">&#128424; Imprimir comprobante</button>
+      </div>
+    </div>
+  </section>
+}

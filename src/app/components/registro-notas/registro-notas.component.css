@@ -1,0 +1,9 @@
+:host { display: block; }
+.notas-form { display: grid; grid-template-columns: 2fr 1.4fr 1fr auto; gap: 16px; align-items: end; padding: 20px; margin-bottom: 28px; }
+.nota { font-weight: 800; }
+.nota-ok { color: var(--green-600); }
+.nota-bad { color: var(--red-600); }
+.link-del { background: transparent; border: 0; color: var(--red-600); font-size: 13px; font-weight: 600; padding: 4px 8px; border-radius: 6px; }
+.link-del:hover { background: var(--red-100); }
+@media (max-width: 900px) { .notas-form { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .notas-form { grid-template-columns: 1fr; } }

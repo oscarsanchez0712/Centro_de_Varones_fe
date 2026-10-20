@@ -1,0 +1,21 @@
+<section class="section section-alt">
+  <div class="container-x">
+    <div class="section-head">
+      <span class="eyebrow">Paso a paso</span>
+      <h2 class="section-title">&#191;C&#243;mo funciona?</h2>
+    </div>
+
+    <div class="pasos-grid">
+      @for (paso of pasos; track paso.numero) {
+        <article class="card card-hover paso">
+          <div class="paso-top">
+            <div class="icon-box">{{ paso.icono }}</div>
+            <span class="paso-num">{{ paso.numero }}</span>
+          </div>
+          <h3>{{ paso.titulo }}</h3>
+          <p>{{ paso.descripcion }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>

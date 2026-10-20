@@ -1,0 +1,286 @@
+<section id="proceso" class="section section-alt">
+  <div class="container-x proceso-wrap">
+    <div class="section-head">
+      <span class="eyebrow">Registro en l&#237;nea</span>
+      <h2 class="section-title">Proceso de matr&#237;cula</h2>
+      <p class="section-sub">Completa los cinco pasos para registrar la solicitud.</p>
+    </div>
+
+    <!-- Barra de progreso -->
+    <ol class="stepper" aria-label="Progreso de la matr&#237;cula">
+      @for (t of ['Estudiante', 'Apoderado', 'Documentos', 'Revisión', 'Envío']; track t; let i = $index) {
+        <li class="step" [class.done]="i + 1 < pasoActual" [class.active]="i + 1 === pasoActual">
+          <button type="button" class="paso-selector" (click)="irAPaso(i + 1)" [attr.aria-current]="i + 1 === pasoActual ? 'step' : null">
+            <span class="paso-punto">@if (i + 1 < pasoActual) { &#10003; } @else { {{ i + 1 }} }</span>
+            <span class="step-label">{{ t }}</span>
+          </button>
+        </li>
+      }
+    </ol>
+
+<div class="card form-card fade-in">
+
+      <!-- PASO 1: ESTUDIANTE -->
+      @if (pasoActual === 1) {
+        <form [formGroup]="formEstudiante">
+          <h3 class="form-title">Datos del estudiante</h3>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="estudiante-nombres" class="label">Nombres</label>
+              <input id="estudiante-nombres" type="text" formControlName="nombres" autocomplete="given-name"
+                (input)="limpiarTexto($event, formEstudiante, 'nombres')"
+                     class="input">
+              @if (mensajeErrorEstudiante('nombres')) {
+                <p class="error">{{ mensajeErrorEstudiante('nombres') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="estudiante-apellidos" class="label">Apellidos</label>
+              <input id="estudiante-apellidos" type="text" formControlName="apellidos" autocomplete="family-name"
+                (input)="limpiarTexto($event, formEstudiante, 'apellidos')"
+                     class="input">
+              @if (mensajeErrorEstudiante('apellidos')) {
+                <p class="error">{{ mensajeErrorEstudiante('apellidos') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="estudiante-dni" class="label">DNI</label>
+              <input id="estudiante-dni" type="text" formControlName="dni" maxlength="8" inputmode="numeric"
+                (input)="limpiarNumeros($event, formEstudiante, 'dni')"
+                     class="input">
+              @if (mensajeErrorEstudiante('dni')) {
+                <p class="error">{{ mensajeErrorEstudiante('dni') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="estudiante-fecha" class="label">Fecha de nacimiento</label>
+              <input id="estudiante-fecha" type="date" formControlName="fechaNacimiento"
+                     class="input">
+              @if (mensajeErrorEstudiante('fechaNacimiento')) {
+                <p class="error">{{ mensajeErrorEstudiante('fechaNacimiento') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="estudiante-grado" class="label">Grado</label>
+              <select id="estudiante-grado" formControlName="grado" class="select">
+                <option value="" disabled>Selecciona un grado</option>
+                @for (g of grados; track g) {
+                  <option [value]="g">{{ g }}</option>
+                }
+              </select>
+              @if (mensajeErrorEstudiante('grado')) {
+                <p class="error">{{ mensajeErrorEstudiante('grado') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="estudiante-nuevo" class="label">¿Es nuevo en la institución?</label>
+              <select id="estudiante-nuevo" formControlName="esNuevo" class="select">
+                <option value="" disabled>Selecciona una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+              @if (mensajeErrorEstudiante('esNuevo')) {
+                <p class="error">{{ mensajeErrorEstudiante('esNuevo') }}</p>
+              }
+            </div>
+          </div>
+        </form>
+      }
+
+      <!-- PASO 2: APODERADO -->
+      @if (pasoActual === 2) {
+        <form [formGroup]="formApoderado">
+          <h3 class="form-title">Datos del apoderado</h3>
+
+          <div class="form-grid">
+            <div class="field col-span-2">
+              <label for="apoderado-nombre" class="label">Nombre completo</label>
+              <input id="apoderado-nombre" type="text" formControlName="nombreCompleto" autocomplete="name"
+                (input)="limpiarTexto($event, formApoderado, 'nombreCompleto')"
+                     class="input">
+              @if (mensajeErrorApoderado('nombreCompleto')) {
+                <p class="error">{{ mensajeErrorApoderado('nombreCompleto') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="apoderado-dni" class="label">DNI</label>
+              <input id="apoderado-dni" type="text" formControlName="dni" maxlength="8" inputmode="numeric"
+                (input)="limpiarNumeros($event, formApoderado, 'dni')"
+                     class="input">
+              @if (mensajeErrorApoderado('dni')) {
+                <p class="error">{{ mensajeErrorApoderado('dni') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="apoderado-telefono" class="label">Teléfono</label>
+              <input id="apoderado-telefono" type="text" formControlName="telefono" maxlength="9" inputmode="numeric"
+                (input)="limpiarNumeros($event, formApoderado, 'telefono')"
+                     class="input">
+              @if (mensajeErrorApoderado('telefono')) {
+                <p class="error">{{ mensajeErrorApoderado('telefono') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="apoderado-correo" class="label">Correo</label>
+              <input id="apoderado-correo" type="email" formControlName="correo"
+                     class="input">
+              @if (mensajeErrorApoderado('correo')) {
+                <p class="error">{{ mensajeErrorApoderado('correo') }}</p>
+              }
+            </div>
+
+            <div class="field">
+              <label for="apoderado-parentesco" class="label">Parentesco</label>
+              <select id="apoderado-parentesco" formControlName="parentesco" class="select">
+                <option value="" disabled>Selecciona una opción</option>
+                @for (p of parentescos; track p) {
+                  <option [value]="p">{{ p }}</option>
+                }
+              </select>
+              @if (mensajeErrorApoderado('parentesco')) {
+                <p class="error">{{ mensajeErrorApoderado('parentesco') }}</p>
+              }
+            </div>
+
+            <div class="field col-span-2">
+              <label for="apoderado-direccion" class="label">Dirección</label>
+              <input id="apoderado-direccion" type="text" formControlName="direccion"
+                     class="input">
+              @if (mensajeErrorApoderado('direccion')) {
+                <p class="error">{{ mensajeErrorApoderado('direccion') }}</p>
+              }
+            </div>
+          </div>
+        </form>
+      }
+
+      <!-- PASO 3: DOCUMENTOS -->
+      @if (pasoActual === 3) {
+        <div>
+          <h3 class="form-title" style="margin-bottom: 4px; border-bottom: 0; padding-bottom: 0;">Documentos</h3>
+          <p class="doc-sub">Formatos permitidos: PDF, JPG, JPEG, PNG.</p>
+
+          <div class="doc-list">
+            @for (doc of documentosCampos; track doc.clave) {
+              <div class="doc-item">
+                <div>
+                  <p class="doc-name">{{ doc.nombre }}</p>
+                  <p class="doc-desc">{{ doc.descripcion }}</p>
+                  @if (documentos[doc.clave].adjuntado) {
+                    <p class="doc-ok">✓ Adjuntado — {{ documentos[doc.clave].nombreArchivo }}</p>
+                  }
+                  @if (erroresDocumentos[doc.clave]) {
+                    <p class="error">{{ erroresDocumentos[doc.clave] }}</p>
+                  }
+                </div>
+                <label
+                  class="btn btn-outline btn-sm doc-btn">
+                  Seleccionar archivo
+                  <input type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png"
+                         (change)="seleccionarArchivo($event, doc.clave)">
+                </label>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- PASO 4: REVISIÓN -->
+      @if (pasoActual === 4) {
+        <div>
+          <h3 class="form-title">Revisar información</h3>
+
+          <div class="review-block">
+            <h4 class="review-title">Datos del estudiante</h4>
+            <div class="review-grid">
+              <p><span class="k">Nombres:</span> {{ formEstudiante.value.nombres }}</p>
+              <p><span class="k">Apellidos:</span> {{ formEstudiante.value.apellidos }}</p>
+              <p><span class="k">DNI:</span> {{ formEstudiante.value.dni }}</p>
+              <p><span class="k">Fecha de nacimiento:</span> {{ formEstudiante.value.fechaNacimiento }}</p>
+              <p><span class="k">Grado:</span> {{ formEstudiante.value.grado }}</p>
+              <p><span class="k">Es nuevo:</span> {{ formEstudiante.value.esNuevo === 'si' ? 'Sí' : 'No' }}</p>
+            </div>
+          </div>
+
+          <div class="review-block">
+            <h4 class="review-title">Datos del apoderado</h4>
+            <div class="review-grid">
+              <p><span class="k">Nombre:</span> {{ formApoderado.value.nombreCompleto }}</p>
+              <p><span class="k">DNI:</span> {{ formApoderado.value.dni }}</p>
+              <p><span class="k">Teléfono:</span> {{ formApoderado.value.telefono }}</p>
+              <p><span class="k">Correo:</span> {{ formApoderado.value.correo }}</p>
+              <p><span class="k">Parentesco:</span> {{ formApoderado.value.parentesco }}</p>
+              <p><span class="k">Dirección:</span> {{ formApoderado.value.direccion }}</p>
+            </div>
+          </div>
+
+          <div class="review-block">
+            <h4 class="review-title">Documentos</h4>
+            <div class="review-grid">
+              @for (doc of documentosCampos; track doc.clave) {
+                <p>
+                  <span class="k">{{ doc.nombre }}:</span>
+                  @if (documentos[doc.clave].adjuntado) {
+                    <span class="v-ok">✓ Adjuntado</span>
+                  } @else {
+                    <span class="v-pend">Pendiente</span>
+                  }
+                </p>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- PASO 5: CONFIRMACIÓN -->
+      @if (pasoActual === 5) {
+        <div class="ok-box fade-in">
+          @if (envioExitoso) {
+            <div class="ok-icon">&#10003;</div>
+            <h3 class="ok-title">¡Solicitud enviada!</h3>
+            <p class="ok-sub">Tu número de solicitud es:</p>
+            <p class="ok-num">{{ numeroSolicitudGenerado }}</p>
+            <span class="badge badge-warn" style="margin-bottom: 26px;">
+              ● EN REVISIÓN
+            </span>
+            <div class="ok-actions">
+              <a routerLink="/" fragment="consulta" (click)="nuevaMatricula()" class="btn btn-primary">
+                Consultar estado
+              </a>
+              <button type="button" (click)="nuevaMatricula()" class="btn btn-outline">
+                Registrar otra matrícula
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- BOTONES DE NAVEGACIÓN -->
+      @if (pasoActual < 5) {
+        <div class="form-nav">
+          <button type="button" (click)="pasoAnterior()" [disabled]="pasoActual === 1"
+                  class="btn btn-text" [style.visibility]="pasoActual === 1 ? 'hidden' : 'visible'">
+            &larr; Anterior
+          </button>
+
+          @if (pasoActual < 4) {
+            <button type="button" (click)="siguientePaso()" class="btn btn-primary">Siguiente &rarr;</button>
+          }
+
+          @if (pasoActual === 4) {
+            <button type="button" (click)="enviarSolicitud()" class="btn btn-gold">Enviar solicitud</button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
