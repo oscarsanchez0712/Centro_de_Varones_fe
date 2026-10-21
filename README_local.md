@@ -15,16 +15,15 @@ navegación por anclas y scroll suave.
 - **HTML5** / **CSS3**
 - **Tailwind CSS** (vía CDN, en `src/index.html`)
 - **Angular Reactive Forms** (`ReactiveFormsModule`) para el formulario de 5 pasos
-- **localStorage** como única fuente de persistencia (sin backend, sin base de datos, sin APIs)
+- **HttpClient** para comunicarse con el backend Spring Boot y SQL Server
 
 ## Arquitectura
 
 ```
-Componentes  →  MatriculaService  →  Matricula (model)  →  localStorage
+Angular  →  servicios HTTP  →  Spring Boot (8085)  →  SQL Server 2022 en Docker
 ```
 
-Los componentes **nunca** acceden directamente a `localStorage`; toda la lectura y
-escritura pasa por `MatriculaService`.
+Matrículas, consulta de estado y notas se guardan en la base SQL Server mediante la API.
 
 ## Estructura del proyecto
 
@@ -37,7 +36,9 @@ src/app/
 ├── models/
 │   └── matricula.model.ts     Interfaces: Estudiante, Apoderado, Documentos, Matricula
 ├── services/
-│   └── matricula.service.ts   Persistencia y gestión de matrículas en localStorage
+│   ├── matricula.service.ts   Llamadas HTTP para matrículas
+│   ├── cursos.service.ts      Catálogo de cursos por nivel
+│   └── notas.service.ts      Llamadas HTTP para notas
 ├── components/
 │   ├── navbar/                Header institucional + menú móvil
 │   ├── hero/                  Sección de bienvenida (#inicio)
@@ -60,23 +61,14 @@ npm install
 ## Ejecución
 
 ```bash
-ng serve
+npm start
 ```
 
-Abrir en el navegador:
+## Backend y base de datos
 
-```
-http://localhost:4200/
-```
+El backend Spring Boot está en `C:\Users\Administrador\Pictures\Centro_de_varones_be` y sigue la estructura de `ASE252S3_T01-be-develop`. Usa SQL Server 2022 en Docker Compose por TCP en `localhost,1433`, además de Swagger y Postman. Sigue su `README.md` para crear `.env`, iniciar SQL Server, ejecutar los scripts SQL y levantar la API en `http://localhost:8085`.
 
-## Notas
-
-- Aplicación **100% frontend**: sin backend, sin base de datos, sin APIs externas, sin login.
-- Todos los datos de las matrículas se guardan en `localStorage` bajo la clave `matriculas_2026`.
-- El botón **"Simular aprobación"** es solo para fines demostrativos del flujo frontend.
-- El comprobante puede imprimirse con el botón **"🖨 Imprimir comprobante"** (usa `window.print()`
-  y estilos `@media print` que ocultan el resto de la página).
-
+Swagger: `http://localhost:8085/swagger-ui.html`. El API guarda matrículas y notas en SQL Server y ofrece cursos de Primaria y Secundaria.
 ## Inicio de sesión (demo)
 - Administrador: `admin` / `Admin2026`
 - Apoderado: `apoderado` / `Padre2026`

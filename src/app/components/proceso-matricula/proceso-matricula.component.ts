@@ -22,8 +22,17 @@ function fechaNacimiento(c: AbstractControl): ValidationErrors | null {
   const f = new Date(c.value);
   const hoy = new Date();
   if (isNaN(+f) || f > hoy) { return { futura: true }; }
-  const edad = (+hoy - +f) / 31557600000;
-  return edad < 2 || edad > 20 ? { rango: true } : null;
+  const edad = edadAlCorte(c.value, 2026);
+  return edad < 6 || edad > 18 ? { rango: true } : null;
+}
+
+function edadAlCorte(fecha: string, anio: number): number {
+  const nacimiento = new Date(`${fecha}T00:00:00`);
+  const corte = new Date(anio, 2, 31);
+  let edad = corte.getFullYear() - nacimiento.getFullYear();
+  if (corte.getMonth() < nacimiento.getMonth() ||
+    (corte.getMonth() === nacimiento.getMonth() && corte.getDate() < nacimiento.getDate())) edad--;
+  return edad;
 }
 
 @Component({
@@ -38,20 +47,21 @@ export class ProcesoMatriculaComponent {
   hoy = new Date().toISOString().slice(0, 10);
 
   grados = [
-    'Inicial 3 años', 'Inicial 4 años', 'Inicial 5 años',
     '1er Grado Primaria', '2do Grado Primaria', '3er Grado Primaria',
     '4to Grado Primaria', '5to Grado Primaria', '6to Grado Primaria',
     '1er Grado Secundaria', '2do Grado Secundaria', '3er Grado Secundaria',
     '4to Grado Secundaria', '5to Grado Secundaria',
   ];
+  secciones = ['A', 'B', 'C'];
   parentescos = ['Padre', 'Madre', 'Apoderado legal', 'Abuelo/a', 'Otro'];
 
   camposEstudiante: Campo[] = [
     { key: 'nombres', label: 'Nombres', tipo: 'texto', auto: 'given-name', ayuda: 'Solo letras. Ej. María José' },
     { key: 'apellidos', label: 'Apellidos', tipo: 'texto', auto: 'family-name', ayuda: 'Paterno y materno' },
     { key: 'dni', label: 'DNI', tipo: 'numero', max: 8, ayuda: '8 dígitos' },
-    { key: 'fechaNacimiento', label: 'Fecha de nacimiento', tipo: 'date', ayuda: 'Entre 2 y 20 años' },
-    { key: 'grado', label: 'Grado', tipo: 'select', opciones: this.grados.map((g) => ({ v: g, t: g })) },
+    { key: 'fechaNacimiento', label: 'Fecha de nacimiento', tipo: 'date', ayuda: 'El grado sugerido se calcula al 31 de marzo de 2026.' },
+    { key: 'grado', label: 'Grado asignado automáticamente', tipo: 'texto', ayuda: 'Se calcula según la fecha de nacimiento y la edad al 31 de marzo de 2026.' },
+    { key: 'seccion', label: 'Sección', tipo: 'select', opciones: this.secciones.map((s) => ({ v: s, t: `Sección ${s}` })) },
     { key: 'esNuevo', label: '¿Es nuevo en la institución?', tipo: 'select', opciones: [{ v: 'si', t: 'Sí' }, { v: 'no', t: 'No' }] },
   ];
   camposApoderado: Campo[] = [
@@ -82,9 +92,35 @@ export class ProcesoMatriculaComponent {
   formEstudiante: FormGroup;
   formApoderado: FormGroup;
 
+  get seccionesDisponibles(): string[] {
+    return this.secciones;
+  }
+
+  alCambiarGrado(): void { /* El grado se deriva de la fecha y no se edita manualmente. */ }
+
+  alCambiarFechaNacimiento(): void {
+    const fecha = this.formEstudiante.get('fechaNacimiento')?.value as string;
+    if (!fecha) return;
+    const grado = this.gradoSugerido(edadAlCorte(fecha, 2026));
+    this.formEstudiante.patchValue({ grado, seccion: '' });
+    this.formEstudiante.get('fechaNacimiento')?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  gradoSugerido(edad: number): string {
+    const gradosPorEdad: Record<number, string> = {
+      6: '1er Grado Primaria', 7: '2do Grado Primaria', 8: '3er Grado Primaria',
+      9: '4to Grado Primaria', 10: '5to Grado Primaria', 11: '6to Grado Primaria',
+      12: '1er Grado Secundaria', 13: '2do Grado Secundaria', 14: '3er Grado Secundaria',
+      15: '4to Grado Secundaria', 16: '5to Grado Secundaria',
+      17: '5to Grado Secundaria', 18: '5to Grado Secundaria',
+    };
+    return gradosPorEdad[edad] ?? '';
+  }
+
   numeroSolicitudGenerado = '';
   fechaGenerada = '';
   envioExitoso = false;
+  enviando = false;
 
   constructor(private fb: FormBuilder, private matriculaService: MatriculaService) {
     const nombre = [Validators.required, Validators.minLength(2), Validators.pattern(PATRON_NOMBRE)];
@@ -92,7 +128,10 @@ export class ProcesoMatriculaComponent {
     this.formEstudiante = this.fb.group({
       nombres: ['', nombre], apellidos: ['', nombre], dni: ['', dni],
       fechaNacimiento: ['', [Validators.required, fechaNacimiento]],
-      grado: ['', Validators.required], esNuevo: ['', Validators.required],
+      grado: ['', Validators.required], seccion: ['', Validators.required], esNuevo: ['', Validators.required],
+    });
+    this.formEstudiante.get('grado')?.valueChanges.subscribe(() => {
+      this.formEstudiante.get('fechaNacimiento')?.updateValueAndValidity({ emitEvent: false });
     });
     this.formApoderado = this.fb.group({
       nombreCompleto: ['', [...nombre, Validators.pattern(/^\S+(?: \S+)+$/)]],
@@ -136,7 +175,7 @@ export class ProcesoMatriculaComponent {
     if (e['repetido']) { return 'Ingresa un DNI válido (no todos los dígitos iguales).'; }
     if (e['email']) { return 'Ingresa un correo válido, ej. nombre@correo.com.'; }
     if (e['futura']) { return 'La fecha no puede ser futura.'; }
-    if (e['rango']) { return 'La edad debe estar entre 2 y 20 años.'; }
+    if (e['rango']) { return 'Para matrícula 2026, la edad debe ser de 6 a 18 años al 31 de marzo.'; }
     if (e['minlength']) { return 'Escribe al menos ' + e['minlength'].requiredLength + ' caracteres.'; }
     if (campo === 'dni') { return 'El DNI debe tener 8 dígitos.'; }
     if (campo === 'telefono') { return 'Debe tener 9 dígitos y empezar con 9.'; }
@@ -177,7 +216,14 @@ export class ProcesoMatriculaComponent {
       const b = typeof localStorage !== 'undefined' ? localStorage.getItem(CLAVE_BORRADOR) : null;
       if (!b) { return; }
       const d = JSON.parse(b);
-      this.formEstudiante.patchValue(d.e);
+      const estudianteBorrador = { ...d.e };
+      if (!/primaria|secundaria/i.test(estudianteBorrador.grado ?? '')) {
+        estudianteBorrador.grado = estudianteBorrador.fechaNacimiento
+          ? this.gradoSugerido(edadAlCorte(estudianteBorrador.fechaNacimiento, 2026))
+          : '';
+      }
+      if (!estudianteBorrador.seccion) estudianteBorrador.seccion = '';
+      this.formEstudiante.patchValue(estudianteBorrador);
       this.formApoderado.patchValue(d.a);
       this.pasoActual = Math.min(Math.max(d.p || 1, 1), 3);
       this.borradorGuardado = true;
@@ -193,10 +239,15 @@ export class ProcesoMatriculaComponent {
     const f = this.pasoActual === 1 ? this.formEstudiante : this.pasoActual === 2 ? this.formApoderado : null;
     let invalido = false;
     if (f) { f.markAllAsTouched(); invalido = f.invalid; }
+    if (invalido && f === this.formEstudiante) {
+      this.mensajeFormulario = 'Completa los datos del estudiante, incluido el grado y la sección.';
+    } else if (invalido && f === this.formApoderado) {
+      this.mensajeFormulario = 'Revisa los datos del apoderado marcados en rojo.';
+    } else {
+      this.mensajeFormulario = '';
+    }
     if (this.pasoActual === 3) {
-      this.documentosCampos.forEach((d) => {
-        if (!this.documentos[d.clave].adjuntado) { this.erroresDocumentos[d.clave] = 'Debes adjuntar este documento.'; invalido = true; }
-      });
+      this.documentosCampos.forEach((d) => delete this.erroresDocumentos[d.clave]);
     }
     if (invalido) {
       this.sacudir = true;
@@ -246,24 +297,40 @@ export class ProcesoMatriculaComponent {
 
   /* ---------- Envío ---------- */
   enviarSolicitud(): void {
-    const numeroSolicitud = this.matriculaService.generarNumeroSolicitud();
-    const fecha = new Date().toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    this.mensajeFormulario = '';
+    if (this.formEstudiante.invalid || this.formApoderado.invalid) {
+      this.formEstudiante.markAllAsTouched();
+      this.formApoderado.markAllAsTouched();
+      this.mensajeFormulario = 'Revisa los datos requeridos antes de enviar la matrícula.';
+      return;
+    }
     const e = this.formEstudiante.value;
     const a = this.formApoderado.value;
     const nueva: Matricula = {
-      numeroSolicitud, fecha,
-      estudiante: { nombres: e.nombres, apellidos: e.apellidos, dni: e.dni, fechaNacimiento: e.fechaNacimiento, grado: e.grado, esNuevo: e.esNuevo === 'si' },
+      numeroSolicitud: '', fecha: '',
+      estudiante: { nombres: e.nombres, apellidos: e.apellidos, dni: e.dni, fechaNacimiento: e.fechaNacimiento, grado: e.grado, seccion: e.seccion, esNuevo: e.esNuevo === 'si' },
       apoderado: { nombreCompleto: a.nombreCompleto, dni: a.dni, telefono: a.telefono, correo: a.correo, parentesco: a.parentesco, direccion: a.direccion },
       documentos: this.documentos,
       estado: 'EN REVISIÓN',
     };
-    this.matriculaService.guardarMatricula(nueva);
-    if (typeof localStorage !== 'undefined') { localStorage.removeItem(CLAVE_BORRADOR); }
-    this.numeroSolicitudGenerado = numeroSolicitud;
-    this.fechaGenerada = fecha;
-    this.envioExitoso = true;
-    this.borradorGuardado = false;
-    this.pasoActual = 5;
+    this.enviando = true;
+    this.matriculaService.guardarMatricula(nueva).subscribe({
+      next: (guardada) => {
+        if (typeof localStorage !== 'undefined') { localStorage.removeItem(CLAVE_BORRADOR); }
+        this.numeroSolicitudGenerado = guardada.numeroSolicitud;
+        this.fechaGenerada = guardada.fecha;
+        this.envioExitoso = true;
+        this.borradorGuardado = false;
+        this.pasoActual = 5;
+        this.enviando = false;
+      },
+      error: (error) => {
+        this.mensajeFormulario = error.status === 409
+          ? 'Este estudiante ya tiene una matrícula registrada para el año escolar.'
+          : 'No se pudo registrar la matrícula. Comprueba que el backend y SQL Server estén activos e inténtalo de nuevo.';
+        this.enviando = false;
+      },
+    });
   }
 
   nuevaMatricula(): void {
@@ -277,5 +344,8 @@ export class ProcesoMatriculaComponent {
     this.borradorGuardado = false;
     if (typeof localStorage !== 'undefined') { localStorage.removeItem(CLAVE_BORRADOR); }
     this.pasoActual = 1;
+    this.mensajeFormulario = '';
   }
+
+  mensajeFormulario = '';
 }

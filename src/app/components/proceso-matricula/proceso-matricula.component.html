@@ -1,17 +1,19 @@
 <ng-template #campoTpl let-f="f" let-c="c" let-p="p">
   <div class="fg" [formGroup]="f">
-    <div class="campo" [class.ancho]="c.ancho" [attr.data-estado]="estado(f, c.key)">
+    <div class="campo" [class.ancho]="c.ancho" [class.campo-calculado]="c.key === 'grado'" [attr.data-estado]="c.key === 'grado' ? (f.get(c.key)?.value ? 'ok' : '') : estado(f, c.key)">
       <label [for]="p + c.key">{{ c.label }}</label>
       <div class="entrada">
-        @if (c.tipo === 'select') {
-          <select [id]="p + c.key" [formControlName]="c.key" (blur)="alSalir(f, c)">
+        @if (c.key === 'grado') {
+          <input [id]="p + c.key" type="text" [formControlName]="c.key" readonly aria-readonly="true" placeholder="Ingresa la fecha de nacimiento" class="campo-automatico">
+        } @else if (c.tipo === 'select') {
+          <select [id]="p + c.key" [formControlName]="c.key" (change)="c.key === 'grado' ? alCambiarGrado() : null" (blur)="alSalir(f, c)">
             <option value="" disabled>Selecciona una opción</option>
             @for (o of c.opciones; track o.v) { <option [value]="o.v">{{ o.t }}</option> }
           </select>
         } @else {
           <input [id]="p + c.key" [type]="c.tipo === 'date' ? 'date' : c.tipo === 'email' ? 'email' : 'text'" [formControlName]="c.key"
                  [attr.maxlength]="c.max" [attr.inputmode]="c.tipo === 'numero' ? 'numeric' : null" [attr.autocomplete]="c.auto"
-                 [attr.max]="c.tipo === 'date' ? hoy : null" (input)="alEscribir($event, f, c)" (blur)="alSalir(f, c)">
+                 [attr.max]="c.tipo === 'date' ? hoy : null" (input)="c.key === 'fechaNacimiento' ? alCambiarFechaNacimiento() : alEscribir($event, f, c)" (blur)="alSalir(f, c)">
         }
         <span class="marca" aria-hidden="true"></span>
       </div>
@@ -48,6 +50,7 @@
         @if (pasoActual === 1) {
           <div class="paso" [attr.key]="1">
             <h3>Datos del estudiante</h3>
+            <p class="seccion-ayuda">Selecciona el grado y luego asigna la sección del estudiante.</p>
             <div class="campos">
               @for (c of camposEstudiante; track c.key) { <ng-container *ngTemplateOutlet="campoTpl; context: { f: formEstudiante, c: c, p: 'e-' }"></ng-container> }
             </div>
@@ -66,7 +69,7 @@
         @if (pasoActual === 3) {
           <div class="paso">
             <h3>Documentos</h3>
-            <p class="ayuda">Arrastra el archivo o haz clic. PDF, JPG o PNG, máximo 5 MB.</p>
+            <p class="ayuda">Adjunta los documentos disponibles. Puedes continuar aunque aún no los tengas. PDF, JPG o PNG, máximo 5 MB cada uno.</p>
             <div class="docs">
               @for (d of documentosCampos; track d.clave) {
                 <div class="dz" [class.sobre]="arrastrando === d.clave" [class.lleno]="documentos[d.clave].adjuntado" [class.malo]="erroresDocumentos[d.clave]"
@@ -95,13 +98,20 @@
             <dl class="rev">
               <dt>Estudiante</dt><dd>{{ formEstudiante.value.nombres }} {{ formEstudiante.value.apellidos }} · DNI {{ formEstudiante.value.dni }}</dd>
               <dt>Nacimiento</dt><dd>{{ formEstudiante.value.fechaNacimiento }}</dd>
-              <dt>Grado</dt><dd>{{ formEstudiante.value.grado }} ({{ formEstudiante.value.esNuevo === 'si' ? 'nuevo' : 'continúa' }})</dd>
+              <dt>Grado y sección</dt><dd>{{ formEstudiante.value.grado }} · Sección {{ formEstudiante.value.seccion }} ({{ formEstudiante.value.esNuevo === 'si' ? 'nuevo' : 'continúa' }})</dd>
               <dt>Apoderado</dt><dd>{{ formApoderado.value.nombreCompleto }} · DNI {{ formApoderado.value.dni }}</dd>
               <dt>Contacto</dt><dd>{{ formApoderado.value.telefono }} · {{ formApoderado.value.correo }}</dd>
               <dt>Parentesco</dt><dd>{{ formApoderado.value.parentesco }}</dd>
               <dt>Dirección</dt><dd>{{ formApoderado.value.direccion }}</dd>
               <dt>Documentos</dt><dd class="ok">{{ docsAdjuntos }} de 6 adjuntados</dd>
             </dl>
+          </div>
+        }
+
+        @if (pasoActual === 4) {
+          <div class="nav nav-revision">
+            <button type="button" class="btn sec" (click)="pasoAnterior()">← Volver y corregir</button>
+            <button type="button" class="btn" (click)="enviarSolicitud()" [disabled]="enviando">{{ enviando ? 'Guardando…' : 'Confirmar matrícula' }}</button>
           </div>
         }
 
@@ -120,10 +130,11 @@
         }
 
         @if (pasoActual < 5) {
+          @if (mensajeFormulario) { <p class="mensaje-formulario" role="alert">{{ mensajeFormulario }}</p> }
           <div class="nav">
             <button type="button" class="btn sec" (click)="pasoAnterior()" [style.visibility]="pasoActual === 1 ? 'hidden' : 'visible'">← Anterior</button>
             @if (pasoActual < 4) { <button type="button" class="btn" (click)="siguientePaso()">Siguiente →</button> }
-            @else { <button type="button" class="btn" (click)="enviarSolicitud()">Enviar solicitud</button> }
+            @else { <button type="button" class="btn" (click)="siguientePaso()">Revisar solicitud →</button> }
           </div>
         }
       </div>
@@ -136,7 +147,7 @@
           <ul>
             <li [class.ok]="formEstudiante.get('nombres')?.valid && formEstudiante.get('apellidos')?.valid"><small>Estudiante</small>{{ formEstudiante.value.nombres || '—' }} {{ formEstudiante.value.apellidos }}</li>
             <li [class.ok]="formEstudiante.get('dni')?.valid"><small>DNI estudiante</small>{{ formEstudiante.value.dni || '—' }}</li>
-            <li [class.ok]="formEstudiante.get('grado')?.valid"><small>Grado</small>{{ formEstudiante.value.grado || '—' }}</li>
+            <li [class.ok]="formEstudiante.get('grado')?.valid && formEstudiante.get('seccion')?.valid"><small>Grado y sección</small>{{ formEstudiante.value.grado || '—' }}{{ formEstudiante.value.seccion ? ' · Sección ' + formEstudiante.value.seccion : '' }}</li>
             <li [class.ok]="formApoderado.get('nombreCompleto')?.valid"><small>Apoderado</small>{{ formApoderado.value.nombreCompleto || '—' }}</li>
             <li [class.ok]="docsAdjuntos === 6"><small>Documentos</small>{{ docsAdjuntos }} de 6</li>
           </ul>

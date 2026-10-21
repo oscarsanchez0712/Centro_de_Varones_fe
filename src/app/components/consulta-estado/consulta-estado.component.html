@@ -11,10 +11,10 @@
                [attr.inputmode]="tipoBusqueda === 'dni' ? 'numeric' : 'text'" [maxlength]="tipoBusqueda === 'dni' ? 8 : 20"
                (input)="limpiarBusqueda($event)" (keyup.enter)="consultar()"
                [placeholder]="tipoBusqueda === 'solicitud' ? 'Ej. MAT-2026-000125' : 'Ej. 12345678'">
-        <button type="button" class="ce-btn" (click)="consultar()">Consultar</button>
+        <button type="button" class="ce-btn" (click)="consultar()" [disabled]="cargando">{{ cargando ? 'Buscando…' : 'Consultar' }}</button>
       </div>
 
-      @if (buscoAlMenosUnaVez && !matricula) { <p class="ce-nada" role="alert">No se encontró ninguna matrícula con ese dato.</p> }
+      @if (buscoAlMenosUnaVez && !matricula && !cargando) { <p class="ce-nada" role="alert">{{ error || 'No se encontró ninguna matrícula con ese dato.' }}</p> }
 
       @if (matricula) {
         <div class="ce-res">

@@ -9,6 +9,7 @@ export interface Estudiante {
   dni: string;
   fechaNacimiento: string;
   grado: string;
+  seccion?: string;
   esNuevo: boolean;
 }
 

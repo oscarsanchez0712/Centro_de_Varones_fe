@@ -69,14 +69,17 @@ button { font-family: inherit; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 
 /* Pie de página */
-.pie { background: var(--navy); color: #fff; border-top: 3px solid var(--crimson); }
+.pie { position: relative; overflow: hidden; background: linear-gradient(112deg, #841521 0%, #a81d29 58%, #bd2933 100%); color: #fff; border-top: 3px solid var(--gold); }
+.pie::before { content: ""; position: absolute; top: -90px; right: 8%; width: 220px; height: 220px; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; box-shadow: 0 0 0 20px rgba(255,255,255,.035), 0 0 0 42px rgba(255,255,255,.025); pointer-events: none; }
 .pie-contenido { max-width: 1100px; margin: 0 auto; padding: 28px 24px; display: grid; gap: 24px; grid-template-columns: 1fr auto; align-items: center; }
-.pie-marca { display: flex; align-items: center; gap: 14px; }
-.pie-escudo { width: 48px; height: 48px; border-radius: 50%; background: #fff; padding: 3px; object-fit: contain; }
-.pie-titulo { margin: 0; font-weight: 600; }
-.pie-sub { margin: 0; color: #b9c9e6; font-size: 13px; }
-.pie-enlaces { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 8px; font-size: 14px; }
-.pie-enlaces a { color: #c3d1ea; text-decoration: none; }
+.pie-marca { position: relative; display: flex; align-items: center; gap: 14px; }
+.pie-escudo { width: 50px; height: 50px; border-radius: 50%; background: #fff; padding: 4px; object-fit: contain; box-shadow: 0 3px 12px rgba(43,5,10,.2); }
+.pie-titulo { margin: 0; font-weight: 700; letter-spacing: .01em; }
+.pie-sub { margin: 2px 0 0; color: #f3c9cb; font-size: 12px; }
+.pie-contenido > nav { position: relative; }
+.pie-contenido > nav > .pie-titulo { font-size: 12px; color: #ffe4d1; text-transform: uppercase; letter-spacing: .08em; }
+.pie-enlaces { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 8px; font-size: 12px; }
+.pie-enlaces a { color: #ffe8e6; text-decoration: none; }
 .pie-enlaces a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 720px) { .pie-contenido { grid-template-columns: 1fr; } }
 

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -9,5 +10,5 @@ import { AuthService } from './services/auth.service';
 export class AppComponent {
   title = 'Gestión de Matrículas 2026';
 
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, public router: Router) {}
 }

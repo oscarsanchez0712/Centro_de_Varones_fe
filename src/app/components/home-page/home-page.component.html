@@ -1,8 +1,64 @@
-<main>
-  <app-hero></app-hero>
-  <app-como-funciona></app-como-funciona>
-  <app-requisitos></app-requisitos>
-  <app-proceso-matricula></app-proceso-matricula>
-  <app-consulta-estado (matriculaEncontrada)="onMatriculaEncontrada($event)"></app-consulta-estado>
-  <app-comprobante [matricula]="matriculaConsultada"></app-comprobante>
+<main class="panel">
+  <div class="panel-encabezado">
+    <div>
+      <p class="panel-ruta">INSTITUCIÓN EDUCATIVA <span>/</span> INICIO</p>
+      <h1>Panel de gestión</h1>
+      <p class="panel-subtitulo">Sistema de matrícula · IEP N.° 20874 · Gestión 2026</p>
+    </div>
+    <div class="panel-estado"><span></span> Sistema activo</div>
+  </div>
+
+  @if (errorCarga) { <p class="api-error" role="alert">{{ errorCarga }}</p> }
+
+  <section class="panel-bienvenida" aria-label="Bienvenida">
+    <div class="bienvenida-texto">
+      <p class="bienvenida-etiqueta">BIENVENIDO/A · {{ auth.sesion?.rol }}</p>
+      <h2>Hola, {{ auth.sesion?.nombre }} <span aria-hidden="true">✦</span></h2>
+      <p>Administra las matrículas y consulta la información académica desde un solo lugar.</p>
+    </div>
+    <img src="logo.jpg" alt="" class="bienvenida-escudo">
+    <div class="bienvenida-brillo" aria-hidden="true"></div>
+  </section>
+
+  <section class="panel-resumen" aria-label="Resumen de matrículas">
+    <article class="resumen-tarjeta">
+      <span class="resumen-icono icono-rojo" aria-hidden="true">▤</span>
+      <div><p>Solicitudes registradas</p><strong>{{ totalMatriculas }}</strong></div>
+      <span class="resumen-detalle">Gestión 2026</span>
+    </article>
+    <article class="resumen-tarjeta">
+      <span class="resumen-icono icono-verde" aria-hidden="true">✓</span>
+      <div><p>Matrículas aprobadas</p><strong>{{ matriculasAprobadas }}</strong></div>
+      <span class="resumen-detalle">{{ porcentajeAprobadas }}% del total</span>
+    </article>
+    <article class="resumen-tarjeta">
+      <span class="resumen-icono icono-oro" aria-hidden="true">◷</span>
+      <div><p>En revisión</p><strong>{{ matriculasEnRevision }}</strong></div>
+      <span class="resumen-detalle">Pendientes de atención</span>
+    </article>
+  </section>
+
+  <section class="panel-accesos">
+    <div class="seccion-titulo">
+      <div><p>ACCESO RÁPIDO</p><h2>Módulos principales</h2></div>
+      <span>Selecciona una opción para continuar</span>
+    </div>
+    <div class="accesos-grid">
+      <a routerLink="/matriculas" class="acceso-tarjeta">
+        <span class="acceso-icono">▤</span><span class="acceso-contenido"><strong>Matrículas</strong><small>Consulta el padrón y el estado de cada solicitud.</small></span><span class="acceso-flecha">›</span>
+      </a>
+      <a routerLink="/notas" class="acceso-tarjeta">
+        <span class="acceso-icono">▧</span><span class="acceso-contenido"><strong>Registro de notas</strong><small>Registra y consulta las calificaciones.</small></span><span class="acceso-flecha">›</span>
+      </a>
+      <a routerLink="/consulta" class="acceso-tarjeta">
+        <span class="acceso-icono">⌕</span><span class="acceso-contenido"><strong>Consultar una solicitud</strong><small>Busca el estado con DNI o número de solicitud.</small></span><span class="acceso-flecha">›</span>
+      </a>
+      <a routerLink="/nueva-matricula" class="acceso-tarjeta">
+        <span class="acceso-icono">＋</span><span class="acceso-contenido"><strong>Nueva matrícula</strong><small>Inicia el registro para la gestión escolar.</small></span><span class="acceso-flecha">›</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="panel-pie"><span>IEP N.° 20874 · San Vicente de Cañete</span><span>Gestión escolar 2026</span></div>
+
 </main>

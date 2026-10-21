@@ -2,16 +2,18 @@
 .pm { background: #f3f5f9; }
 .pm-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 56px; }
 .pm-sub { margin: -6px 0 24px; color: #5b6676; }
+.seccion-ayuda { margin: -10px 0 12px; color: #7a8494; font-size: 12px; }
+.mensaje-formulario { margin: 18px 0 -8px; padding: 11px 14px; border: 1px solid #efc4c6; border-radius: 8px; background: #fff3f3; color: #9e202a; font-size: 13px; }
 .pm-pasos { list-style: none; position: relative; display: flex; justify-content: space-between; max-width: 720px; margin: 0 0 28px; padding: 0; }
 .pm-linea { position: absolute; top: 17px; left: 6%; right: 6%; height: 3px; background: #dbe2ee; border-radius: 9px; }
-.pm-linea span { display: block; height: 100%; background: #12284c; border-radius: 9px; transition: width .5s cubic-bezier(.2,.8,.2,1); }
+.pm-linea span { display: block; height: 100%; background: #b3202a; border-radius: 9px; transition: width .5s cubic-bezier(.2,.8,.2,1); }
 .pm-pasos li { position: relative; flex: 1; display: flex; justify-content: center; }
 .pm-paso { display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: 0; padding: 0; font: inherit; color: #6b7686; cursor: default; }
 .pm-paso:not(:disabled) { cursor: pointer; }
 .pm-punto { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 2px solid #c6cfdd; font-weight: 700; font-size: 13px; transition: all .3s; }
-.pm-paso.activo .pm-punto { background: #12284c; border-color: #12284c; color: #fff; box-shadow: 0 0 0 5px rgba(18,40,76,.15); }
+.pm-paso.activo .pm-punto { background: #b3202a; border-color: #b3202a; color: #fff; box-shadow: 0 0 0 5px rgba(179,32,42,.15); }
 .pm-paso.hecho .pm-punto { background: #1a8f4c; border-color: #1a8f4c; color: #fff; }
-.pm-paso.activo .pm-etq { color: #12284c; font-weight: 600; }
+.pm-paso.activo .pm-etq { color: #b3202a; font-weight: 600; }
 .pm-etq { font-size: 12px; }
 .pm-grid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px; align-items: start; }
 .pm-grid.solo { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
@@ -29,6 +31,9 @@ h3 { margin: 0 0 18px; font-size: 20px; }
 label { margin: 10px 0 6px; font-size: 13px; font-weight: 600; }
 .entrada { position: relative; }
 .entrada input, .entrada select { width: 100%; height: 44px; padding: 0 40px 0 14px; border: 1.5px solid #cfd6e1 !important; border-radius: 8px; background: #fff; transition: border-color .2s, box-shadow .2s; }
+.entrada input.campo-automatico { padding-right: 14px; border-color: #cfd6e1 !important; background: #f5f6f8; color: #26364c; font-weight: 700; cursor: default; }
+.campo-calculado[data-estado="ok"] .entrada input.campo-automatico { border-color: #cfd6e1 !important; background: #f5f6f8; color: #26364c; }
+.campo-calculado .marca { display: none; }
 .entrada input:focus, .entrada select:focus { border-color: #12284c !important; box-shadow: 0 0 0 3px rgba(18,40,76,.15) !important; }
 .marca { position: absolute; right: 12px; top: 13px; width: 18px; height: 18px; border-radius: 50%; opacity: 0; transform: scale(.4); transition: all .25s; pointer-events: none; }
 .campo[data-estado="ok"] .entrada input, .campo[data-estado="ok"] .entrada select { border-color: #1a8f4c !important; }
@@ -57,6 +62,7 @@ label { margin: 10px 0 6px; font-size: 13px; font-weight: 600; }
 .rev { display: grid; grid-template-columns: 110px 1fr; gap: 10px 14px; margin: 0; padding: 16px; background: #f6f8fb; border-radius: 10px; font-size: 14px; }
 .rev dt { color: #7a8494; } .rev dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
 .nav { display: flex; justify-content: space-between; margin-top: 26px; padding-top: 20px; border-top: 1px solid #e6eaf0; }
+.nav-revision { margin-top: 0; padding-top: 20px; }
 .btn { display: inline-block; padding: 11px 22px; border: 1.5px solid #12284c; border-radius: 8px; background: #12284c; color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: transform .15s, background .2s, box-shadow .2s; }
 .btn:hover { background: #1b3a6e; transform: translateY(-1px); box-shadow: 0 6px 14px rgba(18,40,76,.25); }
 .btn:active { transform: scale(.97); }

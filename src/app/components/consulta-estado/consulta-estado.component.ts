@@ -16,6 +16,8 @@ export class ConsultaEstadoComponent {
   valorBusqueda = '';
   matricula: Matricula | null = null;
   buscoAlMenosUnaVez = false;
+  cargando = false;
+  error = '';
 
   constructor(private matriculaService: MatriculaService) {}
 
@@ -35,6 +37,7 @@ export class ConsultaEstadoComponent {
 
   consultar(): void {
     this.buscoAlMenosUnaVez = true;
+    this.error = '';
 
     if (!this.valorBusqueda.trim()) {
       this.matricula = null;
@@ -42,23 +45,34 @@ export class ConsultaEstadoComponent {
       return;
     }
 
-    const resultado =
+    const consulta =
       this.tipoBusqueda === 'solicitud'
         ? this.matriculaService.buscarPorSolicitud(this.valorBusqueda)
         : this.matriculaService.buscarPorDni(this.valorBusqueda);
-
-    this.matricula = resultado ?? null;
-    this.matriculaEncontrada.emit(this.matricula);
+    this.cargando = true;
+    consulta.subscribe({
+      next: (resultado) => {
+        if (!/primaria|secundaria/i.test(resultado.estudiante.grado)) {
+          this.matricula = null;
+          this.error = 'No se encontró la solicitud. Verifica el DNI o número ingresado.';
+          this.matriculaEncontrada.emit(null);
+        } else {
+          this.matricula = resultado;
+          this.matriculaEncontrada.emit(resultado);
+        }
+        this.cargando = false;
+      },
+      error: () => { this.matricula = null; this.error = 'No se encontró la solicitud. Verifica el DNI o número ingresado.'; this.matriculaEncontrada.emit(null); this.cargando = false; },
+    });
   }
 
   simularAprobacion(): void {
     if (!this.matricula) {
       return;
     }
-    const actualizada = this.matriculaService.aprobarMatricula(this.matricula.numeroSolicitud);
-    if (actualizada) {
-      this.matricula = actualizada;
-      this.matriculaEncontrada.emit(this.matricula);
-    }
+    this.matriculaService.aprobarMatricula(this.matricula.numeroSolicitud).subscribe({
+      next: (actualizada) => { this.matricula = actualizada; this.matriculaEncontrada.emit(actualizada); },
+      error: () => { this.error = 'No se pudo actualizar el estado de la matrícula.'; },
+    });
   }
 }

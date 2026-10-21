@@ -1,0 +1,49 @@
+:host { display: block; flex: 1 0 auto; background: #f7f7fa; }
+.api-error { padding: 12px 15px; border: 1px solid #edc7ca; border-radius: 8px; background: #fff4f4; color: #8c1722; }
+.matriculas-pagina { min-height: 100%; padding: 34px 0 48px; }
+.matriculas-contenido { width: min(100% - 64px, 1180px); margin: 0 auto; }
+.matriculas-encabezado { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 23px; }
+.matriculas-kicker { margin: 0 0 7px; color: #9e2732; font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.matriculas-encabezado h1 { margin: 0; color: #821923; font: 750 34px/1.15 'Public Sans', 'Segoe UI', sans-serif; letter-spacing: -.035em; }
+.matriculas-descripcion { max-width: 650px; margin: 7px 0 0; color: #737b88; font-size: 14px; }
+.nueva-matricula { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 0 18px; border-radius: 8px; background: #a71f2b; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 5px 12px #a71f2b2b; }
+.nueva-matricula:hover { background: #861923; }.nueva-matricula span { font-size: 19px; line-height: 1; }
+.matriculas-resumen { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }
+.nivel-card { min-width: 0; min-height: 154px; padding: 17px 18px 15px; border: 1px solid #ececf1; border-radius: 13px; background: #fff; box-shadow: 0 5px 16px #25223808; }
+.nivel-total { border: 0; background: linear-gradient(135deg, #8d1723 0%, #b5202d 69%, #c34b35 100%); color: #fff; box-shadow: 0 9px 20px #a71f2b27; }
+.nivel-cabecera { display: flex; align-items: center; justify-content: space-between; gap: 7px; color: #81818e; font-size: 10px; font-weight: 800; letter-spacing: .055em; }
+.nivel-total .nivel-cabecera { color: #ffe1df; }
+.nivel-sello { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; background: #fff0d4; color: #947029; font-size: 17px; }
+.nivel-total .nivel-sello { background: #fff; color: #a51d29; }
+.nivel-letra { font-size: 13px; font-weight: 800; }
+.nivel-card > strong { display: block; margin-top: 9px; color: #202432; font-size: 34px; font-weight: 750; line-height: 1.1; letter-spacing: -.04em; }
+.nivel-total > strong { color: #fff; }
+.nivel-card > p { overflow: hidden; margin: 5px 0 0; color: #838391; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.nivel-total > p { color: #ffe4e2; }
+.nivel-progreso { height: 5px; margin-top: 13px; overflow: hidden; border-radius: 99px; background: #f0edf1; }
+.nivel-progreso span { display: block; height: 100%; min-width: 3px; border-radius: inherit; background: #efb92e; }
+.filtros-matricula { display: grid; grid-template-columns: minmax(200px, 1.5fr) repeat(3, minmax(135px, .8fr)); gap: 14px; align-items: end; margin-top: 19px; padding: 17px 20px; border: 1px solid #ececf1; border-radius: 12px; background: #fff; box-shadow: 0 4px 14px #25223807; }
+.filtros-matricula label { display: grid; gap: 7px; color: #565966; font-size: 12px; font-weight: 700; }
+.filtros-matricula input, .filtros-matricula select { width: 100%; min-width: 0; height: 42px; min-height: 42px; padding: 0 12px; border: 1px solid #e4e3e9 !important; border-radius: 8px !important; background-color: #fff; color: #333541; font: 500 13px 'Public Sans', 'Segoe UI', sans-serif; }
+.filtros-matricula input::placeholder { color: #a6a6b0; }.filtros-matricula input:focus, .filtros-matricula select:focus { border-color: #b3202a !important; box-shadow: 0 0 0 3px #b3202a1c !important; }
+.campo-busqueda { position: relative; display: block; }.campo-busqueda > span { position: absolute; z-index: 1; top: 7px; left: 12px; color: #92929d; font-size: 23px; line-height: 1; }.campo-busqueda input { padding-left: 39px; }
+.padron-card { margin-top: 17px; overflow: hidden; border: 1px solid #ececf1; border-radius: 13px; background: #fff; box-shadow: 0 5px 17px #25223808; }
+.padron-cabecera { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 18px 21px 15px; }
+.padron-cabecera h2 { margin: 0 !important; color: #2e303c; font: 700 17px/1.3 'Public Sans', 'Segoe UI', sans-serif; }.padron-cabecera h2::after { content: none; }
+.padron-cabecera p { margin: 4px 0 0; color: #92929d; font-size: 12px; }
+.padron-anio { padding: 6px 10px; border-radius: 20px; background: #fff0ef; color: #9f202a; font-size: 10px; font-weight: 700; }
+.tabla-scroll { overflow-x: auto; }
+.padron-card table { width: 100%; min-width: 850px; border-collapse: collapse; text-align: left; }
+.padron-card thead { background: #faf9fb; }
+.padron-card th { padding: 12px 16px; border-top: 1px solid #efedf1; border-bottom: 1px solid #efedf1; color: #7e7d89; font-size: 9px; font-weight: 800; letter-spacing: .075em; white-space: nowrap; }
+.padron-card td { padding: 12px 16px; border-bottom: 1px solid #f0eff2; color: #5f606c; font-size: 11px; white-space: nowrap; }
+.padron-card tbody tr:last-child td { border-bottom: 0; }.padron-card tbody tr:hover { background: #fdfafa; }
+.estudiante-celda { display: flex; align-items: center; gap: 10px; }
+.estudiante-avatar { display: grid; flex: 0 0 34px; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #fff0ef; color: #9f202a; font-size: 13px; font-weight: 800; text-transform: uppercase; }
+.estudiante-celda > span:last-child { display: grid; gap: 2px; }.estudiante-celda strong { color: #32333f; font-size: 11px; font-weight: 700; }.estudiante-celda small { color: #9999a3; font-size: 10px; }
+.estado-etiqueta { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
+.estado-etiqueta i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }.estado-aprobado { background: #eaf6ef; color: #28885a; }.estado-revision { background: #fff5e3; color: #9b701f; }
+.solicitud-celda { color: #858591 !important; font-size: 10px !important; }
+.sin-resultados { height: 155px; text-align: center !important; }.sin-resultados > * { display: block; margin: 3px auto; }.sin-resultados > span { color: #b3202a; font-size: 27px; }.sin-resultados strong { color: #42434d; font-size: 13px; }.sin-resultados small { color: #92929d; font-size: 11px; }
+@media (max-width: 900px) { .matriculas-contenido { width: min(100% - 40px, 760px); }.matriculas-resumen { grid-template-columns: repeat(2, minmax(0, 1fr)); }.filtros-matricula { grid-template-columns: repeat(2, minmax(0, 1fr)); }.filtro-busqueda { grid-column: 1 / -1; } }
+@media (max-width: 540px) { .matriculas-pagina { padding: 25px 0 35px; }.matriculas-contenido { width: min(100% - 28px, 440px); }.matriculas-encabezado { align-items: flex-start; flex-direction: column; gap: 15px; }.matriculas-encabezado h1 { font-size: 30px; }.matriculas-descripcion { font-size: 12px; }.nueva-matricula { width: 100%; }.matriculas-resumen { gap: 9px; }.nivel-card { min-height: 137px; padding: 13px; }.nivel-cabecera { font-size: 8px; }.nivel-sello { width: 29px; height: 29px; }.nivel-card > strong { font-size: 29px; }.nivel-card > p { font-size: 9px; }.filtros-matricula { grid-template-columns: 1fr; gap: 12px; padding: 14px; }.filtro-busqueda { grid-column: auto; }.padron-cabecera { padding: 15px; }.padron-card th, .padron-card td { padding-right: 12px; padding-left: 12px; } }
