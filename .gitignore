@@ -1,7 +1,8 @@
-target/
-.idea/
+﻿**/bin/
+**/obj/
+.vs/
 .vscode/
-*.log
-*.iml
-**/.env
-!**/.env.example
+*.user
+*.suo
+
+/docker-compose-Fabrizio/.env

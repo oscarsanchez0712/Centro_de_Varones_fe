@@ -16,3 +16,7 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+dni-ruc:
+  base-url: https://dniruc.apisperu.com/api/v1/dni
+  token: ${DNI_RUC_TOKEN:}

@@ -12,23 +12,35 @@ Ejecuta PowerShell desde la raíz `Centro_de_varones_be` y abre Docker Desktop.
 Copy-Item .\docker-compose-Fabrizio\.env.example .\docker-compose-Fabrizio\.env
 notepad .\docker-compose-Fabrizio\.env
 docker volume create centro_varones_sql_data
+docker network create centro-varones-network
 ```
 
-Define `CENTRO_DB_PASSWORD` en `.env`. El volumen conserva los datos aunque detengas o recrees los contenedores.
+Define `CENTRO_DB_PASSWORD` en `.env`.
+Define `DNI_RUC_TOKEN` en el mismo `.env` para habilitar la consulta de DNI. No publiques ese token ni lo agregues a archivos versionados. El volumen conserva los datos aunque detengas o recrees los contenedores.
 
 ### 2. Iniciar la base de datos
 
-Los dos archivos se pasan a Compose para que reconozca todos los servicios del mismo grupo; `sqlserver` inicia solamente la base:
+En una instalación nueva, inicia SQL Server con:
 
 ```powershell
 docker compose --env-file .\docker-compose-Fabrizio\.env -p centro-varones -f .\docker-compose-Fabrizio\docker-compose-db.yml -f .\docker-compose-Fabrizio\docker-compose-be.yml up -d sqlserver
 ```
+
+Si Docker informa que `/centro-varones-sqlserver` ya está en uso, reutiliza el contenedor existente en vez de crear otro:
+
+```powershell
+docker start centro-varones-sqlserver
+```
+
+La red `centro-varones-network` es compartida y debe existir antes de iniciar los servicios.
 
 Conecta SSMS a `localhost,1433` con usuario `sa` y la contraseña de `.env`. Ejecuta los scripts en este orden:
 
 1. `src/main/resources/sql/create-database.sql`
 2. `src/main/resources/sql/schema.sql`
 3. `src/main/resources/sql/inserts.sql`
+4. `src/main/resources/sql/create-auditoria.sql` (necesario para listar y revertir auditorías)
+5. `src/main/resources/sql/renumerar-notas.sql` (una vez en la base existente para dejar `NotaId` consecutivos)
 
 El último script agrega 11 matrículas ficticias y 22 notas. No vuelvas a ejecutar `create-database.sql` si ya tienes información real que deseas conservar.
 

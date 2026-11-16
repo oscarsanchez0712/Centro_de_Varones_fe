@@ -13,6 +13,7 @@ services:
       DATABASE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=CentroVarones2026;encrypt=true;trustServerCertificate=true
       DATABASE_USERNAME: sa
       DATABASE_PASSWORD: ${CENTRO_DB_PASSWORD:?Define CENTRO_DB_PASSWORD en .env}
+      DNI_RUC_TOKEN: ${DNI_RUC_TOKEN:-}
     restart: unless-stopped
     networks:
       - centro-varones-network
@@ -20,4 +21,4 @@ services:
 networks:
   centro-varones-network:
     name: centro-varones-network
-    driver: bridge
+    external: true

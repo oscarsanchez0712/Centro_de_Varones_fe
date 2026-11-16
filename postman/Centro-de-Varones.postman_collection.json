@@ -1,1 +1,70 @@
-{"info":{"name":"Centro de Varones - API Académica","schema":"https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},"variable":[{"key":"baseUrl","value":"http://localhost:8085"}],"item":[{"name":"Cursos Primaria","request":{"method":"GET","url":"{{baseUrl}}/api/cursos?nivel=Primaria"}},{"name":"Cursos Secundaria","request":{"method":"GET","url":"{{baseUrl}}/api/cursos?nivel=Secundaria"}},{"name":"Matrículas","item":[{"name":"Listar","request":{"method":"GET","url":"{{baseUrl}}/api/matriculas"}},{"name":"Crear matrícula","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"estudiante\":{\"nombres\":\"Juan Carlos\",\"apellidos\":\"Pérez Ramos\",\"dni\":\"70987654\",\"fechaNacimiento\":\"2018-01-19\",\"grado\":\"3er Grado Primaria\",\"seccion\":\"Sección A\"},\"apoderado\":{\"nombres\":\"María\",\"apellidos\":\"Ramos Díaz\",\"dni\":\"40876543\"},\"documentos\":{}}"},"url":"{{baseUrl}}/api/matriculas"}}]},{"name":"Notas","item":[{"name":"Listar notas","request":{"method":"GET","url":"{{baseUrl}}/api/notas"}},{"name":"Registrar nota","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"dni\":\"70987654\",\"curso\":\"Comunicación\",\"nota\":16}"},"url":"{{baseUrl}}/api/notas"}}]}]}
+{
+  "info": {
+    "name": "Centro de Varones - API Académica",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8085" },
+    { "key": "numeroSolicitud", "value": "MAT-2026-000001" },
+    { "key": "auditoriaId", "value": "1" }
+  ],
+  "item": [
+    { "name": "Cursos Primaria", "request": { "method": "GET", "url": "{{baseUrl}}/api/cursos?nivel=Primaria" } },
+    { "name": "Cursos Secundaria", "request": { "method": "GET", "url": "{{baseUrl}}/api/cursos?nivel=Secundaria" } },
+    {
+      "name": "Matrículas",
+      "item": [
+        { "name": "Listar", "request": { "method": "GET", "url": "{{baseUrl}}/api/matriculas" } },
+        {
+          "name": "Crear matrícula",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"estudiante\":{\"nombres\":\"Juan Carlos\",\"apellidos\":\"Pérez Ramos\",\"dni\":\"70987654\",\"fechaNacimiento\":\"2018-01-19\",\"grado\":\"3er Grado Primaria\",\"seccion\":\"Sección A\"},\"apoderado\":{\"nombres\":\"María\",\"apellidos\":\"Ramos Díaz\",\"dni\":\"40876543\"},\"documentos\":{}}" },
+            "url": "{{baseUrl}}/api/matriculas"
+          }
+        },
+        {
+          "name": "Editar matrícula (solo los campos enviados)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"estudiante\": {\n    \"nombres\": \"Juan Carlos actualizado\"\n  }\n}" },
+            "url": "{{baseUrl}}/api/matriculas/{{numeroSolicitud}}"
+          }
+        },
+        {
+          "name": "Cambiar estado",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"estado\":\"APROBADA\"}" },
+            "url": "{{baseUrl}}/api/matriculas/{{numeroSolicitud}}/estado"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notas",
+      "item": [
+        { "name": "Listar notas", "request": { "method": "GET", "url": "{{baseUrl}}/api/notas" } },
+        {
+          "name": "Registrar nota",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"dni\":\"70987654\",\"curso\":\"Comunicación\",\"nota\":16}" },
+            "url": "{{baseUrl}}/api/notas"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auditoría",
+      "item": [
+        { "name": "Listar auditorías", "request": { "method": "GET", "url": "{{baseUrl}}/api/auditoria" } },
+        { "name": "Revertir auditoría por ID", "request": { "method": "POST", "url": "{{baseUrl}}/api/auditoria/{{auditoriaId}}/revertir" } }
+      ]
+    }
+  ]
+}
