@@ -134,7 +134,8 @@ export class ProcesoMatriculaComponent {
       this.formEstudiante.get('fechaNacimiento')?.updateValueAndValidity({ emitEvent: false });
     });
     this.formApoderado = this.fb.group({
-      nombreCompleto: ['', [...nombre, Validators.pattern(/^\S+(?: \S+)+$/)]],
+      // RENIEC puede devolver un solo nombre (por ejemplo, personas con un nombre corto).
+      nombreCompleto: ['', nombre],
       dni: ['', [...dni, (c: AbstractControl) => (c.value && c.value === this.formEstudiante?.value.dni ? { igual: true } : null)]],
       telefono: ['', [Validators.required, Validators.pattern(/^9\d{8}$/)]],
       correo: ['', [Validators.required, Validators.email]],
@@ -179,7 +180,7 @@ export class ProcesoMatriculaComponent {
     if (e['minlength']) { return 'Escribe al menos ' + e['minlength'].requiredLength + ' caracteres.'; }
     if (campo === 'dni') { return 'El DNI debe tener 8 dígitos.'; }
     if (campo === 'telefono') { return 'Debe tener 9 dígitos y empezar con 9.'; }
-    if (campo === 'nombreCompleto') { return 'Ingresa nombre y apellido, solo letras.'; }
+    if (campo === 'nombreCompleto') { return 'Ingresa un nombre válido, solo letras.'; }
     return 'Solo letras, sin símbolos ni números.';
   }
 
@@ -345,6 +346,11 @@ export class ProcesoMatriculaComponent {
     if (typeof localStorage !== 'undefined') { localStorage.removeItem(CLAVE_BORRADOR); }
     this.pasoActual = 1;
     this.mensajeFormulario = '';
+  }
+
+  cancelarMatricula(): void {
+    this.nuevaMatricula();
+    document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' });
   }
 
   mensajeFormulario = '';

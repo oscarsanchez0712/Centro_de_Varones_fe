@@ -12,6 +12,7 @@
           </select>
         } @else {
           <input [id]="p + c.key" [type]="c.tipo === 'date' ? 'date' : c.tipo === 'email' ? 'email' : 'text'" [formControlName]="c.key"
+                 [appVerificarDni]="c.key === 'dni' && f === formEstudiante ? { form: formEstudiante, dni: 'dni', nombre: 'nombres', apellidos: 'apellidos' } : c.key === 'dni' && f === formApoderado ? { form: formApoderado, dni: 'dni', nombre: 'nombreCompleto' } : null"
                  [attr.maxlength]="c.max" [attr.inputmode]="c.tipo === 'numero' ? 'numeric' : null" [attr.autocomplete]="c.auto"
                  [attr.max]="c.tipo === 'date' ? hoy : null" (input)="c.key === 'fechaNacimiento' ? alCambiarFechaNacimiento() : alEscribir($event, f, c)" (blur)="alSalir(f, c)">
         }
@@ -132,6 +133,7 @@
         @if (pasoActual < 5) {
           @if (mensajeFormulario) { <p class="mensaje-formulario" role="alert">{{ mensajeFormulario }}</p> }
           <div class="nav">
+            <button type="button" class="btn sec cancelar" (click)="cancelarMatricula()">Cancelar</button>
             <button type="button" class="btn sec" (click)="pasoAnterior()" [style.visibility]="pasoActual === 1 ? 'hidden' : 'visible'">← Anterior</button>
             @if (pasoActual < 4) { <button type="button" class="btn" (click)="siguientePaso()">Siguiente →</button> }
             @else { <button type="button" class="btn" (click)="siguientePaso()">Revisar solicitud →</button> }

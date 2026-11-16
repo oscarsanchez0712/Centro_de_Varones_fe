@@ -17,6 +17,7 @@ import { EstudiantesCursoComponent } from './components/estudiantes-curso/estudi
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { RegistroNotasComponent } from './components/registro-notas/registro-notas.component';
 import { LoginComponent } from './components/login/login.component';
+import { VerificarDniDirective } from './directives/verificar-dni.directive';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { LoginComponent } from './components/login/login.component';
     HomePageComponent,
     RegistroNotasComponent,
     LoginComponent,
+    VerificarDniDirective,
   ],
   imports: [
     BrowserModule,
