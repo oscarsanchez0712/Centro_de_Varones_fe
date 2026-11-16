@@ -1,0 +1,26 @@
+# Servicio SQL Server para la base de datos de Centro de Varones.
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: centro-varones-sqlserver
+    environment:
+      MSSQL_SA_PASSWORD: ${CENTRO_DB_PASSWORD:?Define CENTRO_DB_PASSWORD en .env}
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - centro_varones_sql_data:/var/opt/mssql
+    restart: unless-stopped
+    networks:
+      - centro-varones-network
+
+volumes:
+  centro_varones_sql_data:
+    external: true
+    name: centro_varones_sql_data
+
+networks:
+  centro-varones-network:
+    name: centro-varones-network
+    external: true

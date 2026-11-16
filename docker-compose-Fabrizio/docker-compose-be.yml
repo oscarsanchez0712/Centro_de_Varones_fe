@@ -1,0 +1,24 @@
+# API Spring Boot de Centro de Varones.
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: dockerfile-Fabrizio/Dockerfile
+    image: centro-varones-api:1.0.0
+    container_name: centro-varones-api
+    ports:
+      - "8085:8085"
+    environment:
+      PORT: "8085"
+      DATABASE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=CentroVarones2026;encrypt=true;trustServerCertificate=true
+      DATABASE_USERNAME: sa
+      DATABASE_PASSWORD: ${CENTRO_DB_PASSWORD:?Define CENTRO_DB_PASSWORD en .env}
+      DNI_RUC_TOKEN: ${DNI_RUC_TOKEN:-}
+    restart: unless-stopped
+    networks:
+      - centro-varones-network
+
+networks:
+  centro-varones-network:
+    name: centro-varones-network
+    external: true

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: centro-varones-api
+  datasource:
+    url: ${DATABASE_URL:jdbc:sqlserver://localhost:1433;databaseName=CentroVarones2026;encrypt=true;trustServerCertificate=true}
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD:}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  sql:
+    init:
+      mode: never
+server:
+  port: ${PORT:8085}
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+dni-ruc:
+  base-url: https://dniruc.apisperu.com/api/v1/dni
+  token: ${DNI_RUC_TOKEN:}
