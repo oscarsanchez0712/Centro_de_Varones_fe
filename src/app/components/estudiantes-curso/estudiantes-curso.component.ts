@@ -33,6 +33,25 @@ export class EstudiantesCursoComponent {
       : this.matriculas;
   }
 
+  get totalMatriculas(): number {
+    return this.matriculas.length;
+  }
+
+  get porcentajeAprobadas(): number {
+    return this.matriculas.length ? Math.round(this.matriculasAprobadas / this.matriculas.length * 100) : 0;
+  }
+
+  get hayFiltros(): boolean {
+    return !!(this.busqueda.trim() || this.estadoSeleccionado || this.gradoSeleccionado || this.seccionSeleccionada);
+  }
+
+  limpiarFiltros(): void {
+    this.busqueda = '';
+    this.estadoSeleccionado = '';
+    this.gradoSeleccionado = '';
+    this.seccionSeleccionada = '';
+  }
+
   get matriculasAprobadas(): number {
     return this.matriculas.filter((m) => m.estado === 'APROBADA').length;
   }
@@ -46,7 +65,7 @@ export class EstudiantesCursoComponent {
     return this.matriculas.filter((matricula) => {
       const estudiante = matricula.estudiante;
       const coincideBusqueda = !consulta || [estudiante.nombres, estudiante.apellidos, estudiante.dni, matricula.numeroSolicitud]
-        .some((dato) => dato.toLocaleLowerCase('es').includes(consulta));
+        .some((dato) => (dato ?? '').toLocaleLowerCase('es').includes(consulta));
       const coincideGrado = !this.gradoSeleccionado || estudiante.grado === this.gradoSeleccionado;
       const coincideSeccion = !this.seccionSeleccionada || (estudiante.seccion ?? '') === this.seccionSeleccionada;
       const coincideEstado = !this.estadoSeleccionado || matricula.estado === this.estadoSeleccionado;

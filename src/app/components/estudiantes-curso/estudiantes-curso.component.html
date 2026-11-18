@@ -14,7 +14,7 @@
     <section class="matriculas-resumen" aria-label="Resumen de matrículas">
       <article class="nivel-card nivel-total">
         <div class="nivel-cabecera"><span>ESTUDIANTES REGISTRADOS</span><span class="nivel-sello">▤</span></div>
-        <strong>{{ estudiantesFiltrados.length }}</strong>
+        <strong>{{ totalMatriculas }}</strong>
         <p>{{ matriculasAprobadas }} aprobadas · {{ matriculasEnRevision }} en revisión</p>
       </article>
       @for (nivel of resumenNiveles; track nivel.nombre) {
@@ -25,6 +25,12 @@
           <div class="nivel-progreso"><span [style.width.%]="nivel.porcentaje"></span></div>
         </article>
       }
+      <article class="nivel-card">
+        <div class="nivel-cabecera"><span>ESTADO DE SOLICITUDES</span><span class="nivel-sello nivel-ok">✓</span></div>
+        <strong>{{ porcentajeAprobadas }}%</strong>
+        <p>{{ matriculasAprobadas }} aprobadas · {{ matriculasEnRevision }} pendientes</p>
+        <div class="nivel-progreso nivel-doble"><span class="ok" [style.width.%]="porcentajeAprobadas"></span></div>
+      </article>
     </section>
 
     <section class="filtros-matricula" aria-label="Buscar y filtrar matrículas">
@@ -40,20 +46,21 @@
       <label>Sección
         <select [(ngModel)]="seccionSeleccionada"><option value="">Todas las secciones</option>@for (seccion of secciones; track seccion) { <option [value]="seccion">Sección {{ seccion }}</option> }</select>
       </label>
+      @if (hayFiltros) { <button type="button" class="limpiar-filtros" (click)="limpiarFiltros()">✕ Limpiar filtros</button> }
     </section>
 
     <section class="padron-card">
-      <div class="padron-cabecera"><div><h2>Padrón de estudiantes</h2><p>{{ estudiantesFiltrados.length }} resultado(s)</p></div><span class="padron-anio">Gestión 2026</span></div>
+      <div class="padron-cabecera"><div><h2>Padrón de estudiantes</h2><p>Mostrando {{ estudiantesFiltrados.length }} de {{ totalMatriculas }} estudiante(s)</p></div><span class="padron-anio">Gestión 2026</span></div>
       <div class="tabla-scroll">
         <table>
           <thead><tr><th>ESTUDIANTE</th><th>DNI</th><th>GRADO</th><th>SECCIÓN</th><th>FECHA</th><th>ESTADO</th><th>SOLICITUD</th></tr></thead>
           <tbody>
-            @for (matricula of estudiantesFiltrados; track matricula.numeroSolicitud) {
+            @for (matricula of estudiantesFiltrados; track matricula.estudiante.dni) {
               <tr>
                 <td><div class="estudiante-celda"><span class="estudiante-avatar">{{ matricula.estudiante.nombres.charAt(0) }}</span><span><strong>{{ matricula.estudiante.apellidos }}, {{ matricula.estudiante.nombres }}</strong><small>{{ matricula.estudiante.esNuevo ? 'Nuevo ingreso' : 'Continuidad' }}</small></span></div></td>
                 <td>{{ matricula.estudiante.dni }}</td><td>{{ matricula.estudiante.grado }}</td><td>{{ matricula.estudiante.seccion ? 'Sección ' + matricula.estudiante.seccion : 'Sin asignar' }}</td><td>{{ matricula.fecha }}</td>
                 <td><span class="estado-etiqueta" [class.estado-aprobado]="matricula.estado === 'APROBADA'" [class.estado-revision]="matricula.estado !== 'APROBADA'"><i></i>{{ matricula.estado === 'APROBADA' ? 'Aprobada' : 'En revisión' }}</span></td>
-                <td class="solicitud-celda">{{ matricula.numeroSolicitud }}</td>
+                <td class="solicitud-celda">{{ matricula.numeroSolicitud || '—' }}</td>
               </tr>
             } @empty {
               <tr><td colspan="7" class="sin-resultados"><span aria-hidden="true">⌕</span><strong>No encontramos matrículas</strong><small>Prueba con otro nombre, DNI o filtro.</small></td></tr>

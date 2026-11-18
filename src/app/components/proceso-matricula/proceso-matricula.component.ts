@@ -7,6 +7,7 @@ const EXTENSIONES = ['pdf', 'jpg', 'jpeg', 'png'];
 const MAX_MB = 5;
 const L = 'A-Za-zÁÉÍÓÚáéíóúÑñÜü';
 const PATRON_NOMBRE = new RegExp(`^[${L}]+(?:[ '-][${L}]+)*$`);
+const PATRON_DIRECCION = new RegExp(`^[${L}0-9][${L}0-9 .,#°/-]*$`);
 const CLAVE_BORRADOR = 'borrador_matricula_2026';
 
 type ClaveDocumento = keyof Documentos;
@@ -15,6 +16,21 @@ interface Campo { key: string; label: string; tipo: 'texto' | 'numero' | 'date' 
 
 function dniRepetido(c: AbstractControl): ValidationErrors | null {
   return /^(\d)\1{7}$/.test(c.value || '') ? { repetido: true } : null;
+}
+
+function telefonoRepetido(c: AbstractControl): ValidationErrors | null {
+  return /^(\d)\1{8}$/.test(c.value || '') ? { repetido: true } : null;
+}
+
+const TLD_GENERICOS = ['com', 'net', 'org', 'edu', 'gob', 'gov', 'info', 'biz', 'io', 'dev', 'app', 'online', 'site', 'tech', 'xyz', 'store'];
+
+function correoValido(c: AbstractControl): ValidationErrors | null {
+  const valor = String(c.value || '').trim();
+  if (!valor) { return null; }
+  const m = /^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@((?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,})$/.exec(valor);
+  if (!m) { return { email: true }; }
+  const tld = m[1].split('.').pop()!.toLowerCase();
+  return tld.length === 2 || TLD_GENERICOS.includes(tld) ? null : { email: true };
 }
 
 function fechaNacimiento(c: AbstractControl): ValidationErrors | null {
@@ -56,8 +72,8 @@ export class ProcesoMatriculaComponent {
   parentescos = ['Padre', 'Madre', 'Apoderado legal', 'Abuelo/a', 'Otro'];
 
   camposEstudiante: Campo[] = [
-    { key: 'nombres', label: 'Nombres', tipo: 'texto', auto: 'given-name', ayuda: 'Solo letras. Ej. María José' },
-    { key: 'apellidos', label: 'Apellidos', tipo: 'texto', auto: 'family-name', ayuda: 'Paterno y materno' },
+    { key: 'nombres', label: 'Nombres', tipo: 'texto', max: 40, auto: 'given-name', ayuda: 'Solo letras. Ej. María José' },
+    { key: 'apellidos', label: 'Apellidos', tipo: 'texto', max: 60, auto: 'family-name', ayuda: 'Paterno y materno' },
     { key: 'dni', label: 'DNI', tipo: 'numero', max: 8, ayuda: '8 dígitos' },
     { key: 'fechaNacimiento', label: 'Fecha de nacimiento', tipo: 'date', ayuda: 'El grado sugerido se calcula al 31 de marzo de 2026.' },
     { key: 'grado', label: 'Grado asignado automáticamente', tipo: 'texto', ayuda: 'Se calcula según la fecha de nacimiento y la edad al 31 de marzo de 2026.' },
@@ -65,12 +81,12 @@ export class ProcesoMatriculaComponent {
     { key: 'esNuevo', label: '¿Es nuevo en la institución?', tipo: 'select', opciones: [{ v: 'si', t: 'Sí' }, { v: 'no', t: 'No' }] },
   ];
   camposApoderado: Campo[] = [
-    { key: 'nombreCompleto', label: 'Nombre completo', tipo: 'texto', auto: 'name', ancho: true, ayuda: 'Nombres y apellidos' },
+    { key: 'nombreCompleto', label: 'Nombre completo', tipo: 'texto', max: 100, auto: 'name', ancho: true, ayuda: 'Nombres y apellidos' },
     { key: 'dni', label: 'DNI', tipo: 'numero', max: 8, ayuda: '8 dígitos' },
     { key: 'telefono', label: 'Teléfono', tipo: 'numero', max: 9, ayuda: 'Empieza con 9' },
-    { key: 'correo', label: 'Correo', tipo: 'email', ayuda: 'nombre@correo.com' },
+    { key: 'correo', label: 'Correo', tipo: 'email', max: 80, ayuda: 'nombre@correo.com' },
     { key: 'parentesco', label: 'Parentesco', tipo: 'select', opciones: this.parentescos.map((p) => ({ v: p, t: p })) },
-    { key: 'direccion', label: 'Dirección', tipo: 'texto', ancho: true, ayuda: 'Calle, número y distrito' },
+    { key: 'direccion', label: 'Dirección', tipo: 'texto', max: 100, ancho: true, ayuda: 'Calle, número y distrito' },
   ];
 
   documentosCampos: DocumentoCampo[] = [
@@ -137,10 +153,10 @@ export class ProcesoMatriculaComponent {
       // RENIEC puede devolver un solo nombre (por ejemplo, personas con un nombre corto).
       nombreCompleto: ['', nombre],
       dni: ['', [...dni, (c: AbstractControl) => (c.value && c.value === this.formEstudiante?.value.dni ? { igual: true } : null)]],
-      telefono: ['', [Validators.required, Validators.pattern(/^9\d{8}$/)]],
-      correo: ['', [Validators.required, Validators.email]],
+      telefono: ['', [Validators.required, Validators.pattern(/^9\d{8}$/), telefonoRepetido]],
+      correo: ['', [Validators.required, correoValido]],
       parentesco: ['', Validators.required],
-      direccion: ['', [Validators.required, Validators.minLength(5)]],
+      direccion: ['', [Validators.required, Validators.minLength(5), Validators.pattern(PATRON_DIRECCION)]],
     });
     this.restaurarBorrador();
     this.formEstudiante.valueChanges.subscribe(() => this.guardarBorrador());
@@ -173,13 +189,14 @@ export class ProcesoMatriculaComponent {
     const e = c.errors;
     if (e['required']) { return 'Este campo es obligatorio.'; }
     if (e['igual']) { return 'El DNI del apoderado no puede ser igual al del estudiante.'; }
-    if (e['repetido']) { return 'Ingresa un DNI válido (no todos los dígitos iguales).'; }
+    if (e['repetido']) { return campo === 'telefono' ? 'Ingresa un número de teléfono válido (no todos los dígitos iguales).' : 'Ingresa un DNI válido (no todos los dígitos iguales).'; }
     if (e['email']) { return 'Ingresa un correo válido, ej. nombre@correo.com.'; }
     if (e['futura']) { return 'La fecha no puede ser futura.'; }
     if (e['rango']) { return 'Para matrícula 2026, la edad debe ser de 6 a 18 años al 31 de marzo.'; }
     if (e['minlength']) { return 'Escribe al menos ' + e['minlength'].requiredLength + ' caracteres.'; }
     if (campo === 'dni') { return 'El DNI debe tener 8 dígitos.'; }
     if (campo === 'telefono') { return 'Debe tener 9 dígitos y empezar con 9.'; }
+    if (campo === 'direccion') { return 'Usa solo letras, números y . , # - /'; }
     if (campo === 'nombreCompleto') { return 'Ingresa un nombre válido, solo letras.'; }
     return 'Solo letras, sin símbolos ni números.';
   }
@@ -237,6 +254,16 @@ export class ProcesoMatriculaComponent {
   }
 
   siguientePaso(): void {
+    if (this.pasoActual === 3) {
+      const pendiente = this.formEstudiante.invalid ? 1 : this.formApoderado.invalid ? 2 : 0;
+      if (pendiente) {
+        this.formEstudiante.markAllAsTouched();
+        this.formApoderado.markAllAsTouched();
+        this.pasoActual = pendiente;
+        this.mensajeFormulario = pendiente === 1 ? 'Completa los datos del estudiante antes de continuar.' : 'Completa los datos del apoderado antes de continuar.';
+        return;
+      }
+    }
     const f = this.pasoActual === 1 ? this.formEstudiante : this.pasoActual === 2 ? this.formApoderado : null;
     let invalido = false;
     if (f) { f.markAllAsTouched(); invalido = f.invalid; }
