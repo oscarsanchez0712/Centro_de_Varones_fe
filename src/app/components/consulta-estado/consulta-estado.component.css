@@ -1,12 +1,12 @@
 :host { display: block; }
 .ce { background: #fff; }
 .ce-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
-.ce-card { max-width: 640px; padding: 26px; background: #fbfcfe; border: 1px solid #dfe3ea; border-radius: 12px; }
+.ce-card { max-width: 900px; padding: 26px; background: #fbfcfe; border: 1px solid #dfe3ea; border-radius: 12px; }
 .ce-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
 .ce-tabs button { flex: 1; padding: 10px; border: 1px solid #cfd6e1; border-radius: 8px; background: #fff; font: inherit; font-weight: 600; font-size: 14px; color: #12284c; cursor: pointer; transition: all .2s; }
 .ce-tabs button.on { background: #12284c; border-color: #12284c; color: #fff; }
 .ce-fila { display: flex; gap: 8px; }
-.ce-fila input { flex: 1; height: 44px; padding: 0 14px; border: 1.5px solid #cfd6e1; border-radius: 8px; background: #fff; }
+.ce-fila input { flex: 1; min-width: 0; height: 44px; padding: 0 14px; border: 1.5px solid #cfd6e1; border-radius: 8px; background: #fff; }
 .ce-btn { padding: 0 22px; border: 0; border-radius: 8px; background: #b3202a; color: #fff; font-weight: 600; cursor: pointer; transition: background .2s, transform .15s; }
 .ce-btn:hover { background: #cc2a35; } .ce-btn:active { transform: scale(.96); }
 .ce-nada { margin: 16px 0 0; color: #b3202a; font-size: 14px; text-align: center; }
@@ -16,7 +16,6 @@
 .ce-top small { display: block; color: #7a8494; font-size: 12px; } .ce-top strong { font: 700 20px 'Source Serif 4', serif; color: #12284c; }
 .ce-estado { padding: 5px 14px; border-radius: 99px; background: #fff4d6; color: #8a6200; font-weight: 600; font-size: 13px; }
 .ce-estado.ap { background: #e2f5ea; color: #137a40; }
-.ce-dato { margin: 10px 0 22px; font-size: 14px; color: #5b6676; }
 .ce-linea { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); position: relative; }
 .ce-linea li { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; font-size: 13px; color: #7a8494; }
 .ce-linea li + li::before { content: ""; position: absolute; top: 17px; right: 50%; width: 100%; height: 3px; background: #dbe2ee; z-index: 0; }
@@ -29,3 +28,26 @@
 @keyframes pulso { 0% { box-shadow: 0 0 0 0 rgba(217,164,65,.55); } 100% { box-shadow: 0 0 0 12px rgba(217,164,65,0); } }
 .ce-sim { width: 100%; margin-top: 22px; padding: 10px; border: 1px dashed #d9a441; border-radius: 8px; background: #fffaf0; color: #8a6200; font-weight: 600; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+
+/* Datos de la matrícula */
+.ce-alumno { display: flex; align-items: center; gap: 14px; margin: 16px 0 24px; padding: 14px 16px; background: linear-gradient(112deg, #12284c, #1b3a6e); border-radius: 10px; color: #fff; }
+.ce-avatar { display: grid; place-items: center; flex: 0 0 48px; width: 48px; height: 48px; border-radius: 50%; background: #d9a441; color: #12284c; font: 700 17px 'Source Serif 4', serif; letter-spacing: .02em; }
+.ce-alumno strong { display: block; font: 700 18px 'Source Serif 4', serif; }
+.ce-alumno span:not(.ce-avatar) { font-size: 13px; color: #c9d4ea; }
+.ce-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 26px; }
+.ce-bloque { padding: 16px 18px; background: #fbfcfe; border: 1px solid #dfe3ea; border-radius: 10px; }
+.ce-bloque h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 2px solid #b3202a; font: 700 12px 'Public Sans', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #12284c; }
+.ce-bloque dl { margin: 0; }
+.ce-bloque dl > div { display: flex; justify-content: space-between; gap: 14px; padding: 7px 0; border-bottom: 1px solid #eef1f6; font-size: 13.5px; }
+.ce-bloque dl > div:last-child { border-bottom: 0; }
+.ce-bloque dt { flex: 0 0 auto; color: #7a8494; }
+.ce-bloque dd { margin: 0; text-align: right; font-weight: 600; color: #1b2433; overflow-wrap: anywhere; }
+.ce-docs { margin-top: 16px; }
+.ce-docs ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ce-docs li { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid #dfe3ea; border-radius: 8px; background: #fff; font-size: 13px; color: #7a8494; }
+.ce-docs li span { display: grid; place-items: center; flex: 0 0 20px; width: 20px; height: 20px; border-radius: 50%; background: #eef1f6; font-size: 12px; font-weight: 700; }
+.ce-docs li.ok { color: #137a40; background: #f1faf5; border-color: #cdebd9; }
+.ce-docs li.ok span { background: #1a8f4c; color: #fff; }
+@media (max-width: 720px) { .ce-datos { grid-template-columns: 1fr; } .ce-docs ul { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .ce-docs ul { grid-template-columns: 1fr; } }
+.ce-nw { white-space: nowrap; }

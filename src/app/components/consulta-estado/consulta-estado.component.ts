@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatriculaService } from '../../services/matricula.service';
 import { Matricula } from '../../models/matricula.model';
+import { AuthService } from '../../services/auth.service';
 
 type TipoBusqueda = 'solicitud' | 'dni';
 
@@ -19,7 +20,7 @@ export class ConsultaEstadoComponent {
   cargando = false;
   error = '';
 
-  constructor(private matriculaService: MatriculaService) {}
+  constructor(private matriculaService: MatriculaService, public auth: AuthService) {}
 
   seleccionarTipo(tipo: TipoBusqueda): void {
     this.tipoBusqueda = tipo;

@@ -53,3 +53,13 @@
   .seccion-titulo { align-items: flex-start; flex-direction: column; gap: 4px; }.accesos-grid { grid-template-columns: 1fr; gap: 9px; }.acceso-tarjeta { min-height: 76px; padding: 12px; }.panel-pie { font-size: 9px; }
 }
 @media (prefers-reduced-motion: reduce) { .acceso-tarjeta { transition: none; } }
+/* Accesos: ocupan todo el ancho y se reparten solos */
+.accesos-grid.accesos-fluida { width: 100%; max-width: none; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+/* Guía rápida */
+.guia { margin-top: 28px; }
+.guia-pasos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.guia-pasos li { display: flex; gap: 14px; align-items: flex-start; padding: 18px; background: #fff; border: 1px solid #e4e3e9; border-radius: 14px; }
+.guia-numero { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #a71f2b; color: #fff; font-weight: 700; }
+.guia-pasos strong { display: block; margin-bottom: 4px; font-size: 15px; color: #1a1b25; }
+.guia-pasos p { margin: 0; font-size: 13px; line-height: 1.5; color: #565966; }

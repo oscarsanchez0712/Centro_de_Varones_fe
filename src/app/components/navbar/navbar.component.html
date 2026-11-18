@@ -10,8 +10,11 @@
 
     <nav aria-label="Navegación principal" class="nav-enlaces">
       <a routerLink="/" fragment="inicio" (click)="cerrarMenu()">Inicio</a>
-      <a routerLink="/matriculas" (click)="cerrarMenu()">Matrículas</a>
-      <a routerLink="/notas" (click)="cerrarMenu()">Notas</a>
+      <a routerLink="/colegio" (click)="cerrarMenu()">El colegio</a>
+      @if (auth.esAdmin) {
+        <a routerLink="/matriculas" (click)="cerrarMenu()">Matrículas</a>
+        <a routerLink="/notas" (click)="cerrarMenu()">Notas</a>
+      }
       <a routerLink="/consulta" (click)="cerrarMenu()" class="nav-cta">Consultar estado</a>
       <span class="nav-usuario">
         <span class="nav-avatar" aria-hidden="true">{{ auth.sesion?.nombre?.charAt(0) }}</span>
@@ -28,8 +31,11 @@
   @if (menuAbierto) {
     <nav aria-label="Navegación móvil" class="nav-movil fade-in">
       <a routerLink="/" fragment="inicio" (click)="cerrarMenu()">Inicio</a>
-      <a routerLink="/matriculas" (click)="cerrarMenu()">Matrículas</a>
-      <a routerLink="/notas" (click)="cerrarMenu()">Notas</a>
+      <a routerLink="/colegio" (click)="cerrarMenu()">El colegio</a>
+      @if (auth.esAdmin) {
+        <a routerLink="/matriculas" (click)="cerrarMenu()">Matrículas</a>
+        <a routerLink="/notas" (click)="cerrarMenu()">Notas</a>
+      }
       <a routerLink="/consulta" (click)="cerrarMenu()" class="nav-cta">Consultar estado</a>
       <button type="button" (click)="cerrarSesion()" class="nav-salir">Cerrar sesión ({{ auth.sesion?.nombre }})</button>
     </nav>
