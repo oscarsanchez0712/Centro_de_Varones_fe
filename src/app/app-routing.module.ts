@@ -6,16 +6,20 @@ import { RegistroNotasComponent } from './components/registro-notas/registro-not
 import { LoginComponent } from './components/login/login.component';
 import { ProcesoMatriculaComponent } from './components/proceso-matricula/proceso-matricula.component';
 import { ConsultaEstadoComponent } from './components/consulta-estado/consulta-estado.component';
-import { authGuard } from './services/auth.service';
+import { RegistroCuentaComponent } from './components/registro-cuenta/registro-cuenta.component';
+import { InstitucionComponent } from './components/institucion/institucion.component';
+import { adminGuard, authGuard } from './services/auth.service';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegistroCuentaComponent },
   { path: '', component: HomePageComponent, canActivate: [authGuard] },
-  { path: 'matriculas', component: EstudiantesCursoComponent, canActivate: [authGuard] },
+  { path: 'colegio', component: InstitucionComponent, canActivate: [authGuard] },
+  { path: 'matriculas', component: EstudiantesCursoComponent, canActivate: [authGuard, adminGuard] },
   { path: 'nueva-matricula', component: ProcesoMatriculaComponent, canActivate: [authGuard] },
   { path: 'consulta', component: ConsultaEstadoComponent, canActivate: [authGuard] },
   { path: 'estudiantes', redirectTo: 'matriculas', pathMatch: 'full' },
-  { path: 'notas', component: RegistroNotasComponent, canActivate: [authGuard] },
+  { path: 'notas', component: RegistroNotasComponent, canActivate: [authGuard, adminGuard] },
   { path: '**', redirectTo: '' },
 ];
 

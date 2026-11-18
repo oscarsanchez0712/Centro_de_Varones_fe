@@ -18,6 +18,8 @@ import { HomePageComponent } from './components/home-page/home-page.component';
 import { RegistroNotasComponent } from './components/registro-notas/registro-notas.component';
 import { LoginComponent } from './components/login/login.component';
 import { VerificarDniDirective } from './directives/verificar-dni.directive';
+import { RegistroCuentaComponent } from './components/registro-cuenta/registro-cuenta.component';
+import { InstitucionComponent } from './components/institucion/institucion.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,8 @@ import { VerificarDniDirective } from './directives/verificar-dni.directive';
     RegistroNotasComponent,
     LoginComponent,
     VerificarDniDirective,
+    RegistroCuentaComponent,
+    InstitucionComponent,
   ],
   imports: [
     BrowserModule,
