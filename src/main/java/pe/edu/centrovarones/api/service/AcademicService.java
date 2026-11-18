@@ -128,9 +128,11 @@ public class AcademicService {
   public List<Map<String,Object>> notas() { return db.query("SELECT n.NotaId AS id,RTRIM(m.DNI) AS dni,c.Nombre AS curso,n.Calificacion AS nota FROM dbo.Notas n JOIN dbo.Matriculas m ON m.MatriculaId=n.MatriculaId JOIN dbo.Cursos c ON c.CursoId=n.CursoId ORDER BY n.NotaId ASC",(rs,n)->Map.of("id",rs.getLong("id"),"dni",rs.getString("dni"),"curso",rs.getString("curso"),"nota",rs.getBigDecimal("nota"))); }
   @Transactional
   public Map<String,Object> createNota(Map<String,Object> req) {
-    String dni=text(req.get("dni")), course=text(req.get("curso")); double score;
-    try { score=Double.parseDouble(String.valueOf(req.get("nota"))); } catch(Exception e) { throw new IllegalArgumentException("La nota debe ser numérica."); }
-    if(score<0||score>20) throw new IllegalArgumentException("La nota debe estar entre 0 y 20.");
+    String dni=text(req.get("dni")), course=text(req.get("curso")); java.math.BigDecimal score;
+    try { score=new java.math.BigDecimal(String.valueOf(req.get("nota")).trim()); } catch(Exception e) { throw new IllegalArgumentException("La nota debe ser numérica."); }
+    if(score.compareTo(java.math.BigDecimal.ZERO)<0||score.compareTo(java.math.BigDecimal.valueOf(20))>0) throw new IllegalArgumentException("La nota debe estar entre 0 y 20.");
+    if(score.stripTrailingZeros().scale()>1) throw new IllegalArgumentException("La nota admite como máximo un decimal.");
+    score=score.setScale(1,java.math.RoundingMode.UNNECESSARY);
     Map<String,Object> mat=byDni(dni); if(mat==null)throw new NoSuchElementException("No existe matrícula para ese DNI.");
     String grade=text(get(object(get(mat,"estudiante")),"grado")),lvl=level(grade); if(lvl.isBlank())throw new IllegalArgumentException("No se reconoce el nivel del grado.");
     List<Integer> cid=db.query("SELECT CursoId FROM dbo.Cursos WHERE Nombre=? AND Nivel=? AND Activo=1",(rs,n)->rs.getInt(1),course,lvl); if(cid.isEmpty())throw new IllegalArgumentException("El curso no corresponde al nivel del estudiante.");
