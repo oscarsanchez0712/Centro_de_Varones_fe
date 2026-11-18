@@ -21,6 +21,10 @@ export class RegistroNotasComponent {
   mensajeError = '';
   cargando = true;
   registrando = false;
+  intentoEnvio = false;
+  confirmandoId: number | null = null;
+  /** Nota mínima aprobatoria. Cámbiala aquí si tu docente indica otro valor (por ejemplo 11). */
+  readonly notaMinima = 13;
 
   constructor(
     private matriculaService: MatriculaService,
@@ -41,7 +45,25 @@ export class RegistroNotasComponent {
     });
   }
 
+  get errorEstudiante(): string {
+    return this.intentoEnvio && !this.dniEstudiante ? 'Selecciona un estudiante.' : '';
+  }
+
+  get errorCurso(): string {
+    if (this.intentoEnvio && !this.curso) { return 'Selecciona un curso.'; }
+    return this.notaDuplicada ? 'Ya tiene nota en este curso.' : '';
+  }
+
+  get errorNota(): string {
+    if (this.nota === null || this.nota === undefined) { return this.intentoEnvio ? 'Ingresa la nota.' : ''; }
+    if (this.nota < 0 || this.nota > 20) { return 'Debe ser de 0 a 20.'; }
+    if (Math.abs(this.nota * 10 - Math.round(this.nota * 10)) > 1e-9) { return 'Máximo 1 decimal.'; }
+    return '';
+  }
+
   agregarNota(): void {
+    this.intentoEnvio = true;
+    if (this.errorEstudiante || this.errorCurso || this.errorNota) { return; }
     const dni = this.dniEstudiante;
     const curso = this.curso;
     const estudiante = this.obtenerMatricula(dni);
@@ -55,6 +77,7 @@ export class RegistroNotasComponent {
         this.curso = '';
         this.cursosActuales = [];
         this.nota = null;
+        this.intentoEnvio = false;
         this.registrando = false;
       },
       error: (error) => {
@@ -66,8 +89,8 @@ export class RegistroNotasComponent {
 
   eliminarNota(id: number): void {
     this.notasService.eliminar(id).subscribe({
-      next: () => { this.registros = this.registros.filter((registro) => registro.id !== id); },
-      error: () => { this.mensajeError = 'No se pudo eliminar la nota del servidor.'; },
+      next: () => { this.registros = this.registros.filter((registro) => registro.id !== id); this.confirmandoId = null; },
+      error: () => { this.mensajeError = 'No se pudo eliminar la nota del servidor.'; this.confirmandoId = null; },
     });
   }
 

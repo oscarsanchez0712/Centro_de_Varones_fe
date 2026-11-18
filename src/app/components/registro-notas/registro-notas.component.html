@@ -3,28 +3,31 @@
     <header class="notas-encabezado">
       <div><p>GESTIÓN ACADÉMICA</p><h1>Registro de notas</h1><span>Selecciona al estudiante y registra su calificación en un curso de su nivel.</span></div>
       <label>Nivel educativo
-        <select [(ngModel)]="nivelSeleccionado" (ngModelChange)="dniEstudiante = ''; curso = ''; cursosActuales = []"><option value="">Todos los niveles</option><option value="Primaria">Primaria</option><option value="Secundaria">Secundaria</option></select>
+        <select [(ngModel)]="nivelSeleccionado" (ngModelChange)="dniEstudiante = ''; curso = ''; cursosActuales = []; intentoEnvio = false"><option value="">Todos los niveles</option><option value="Primaria">Primaria</option><option value="Secundaria">Secundaria</option></select>
       </label>
     </header>
 
     @if (mensajeError) { <p class="notas-error" role="alert">{{ mensajeError }}</p> }
 
     <form (ngSubmit)="agregarNota()" class="notas-formulario">
-      <label>Estudiante
+      <label [class.invalido]="errorEstudiante">Estudiante
         <input name="busquedaEstudiante" [(ngModel)]="busquedaEstudiante" type="search" placeholder="Buscar por nombre, DNI o grado" autocomplete="off">
         <select name="dniEstudiante" [(ngModel)]="dniEstudiante" (ngModelChange)="alCambiarEstudiante()" required>
           <option value="" disabled>Selecciona un estudiante · {{ matriculasDisponibles.length }} disponibles</option>
           @for (matricula of matriculasDisponibles; track matricula.estudiante.dni) { <option [value]="matricula.estudiante.dni">{{ nombreEstudiante(matricula) }} · {{ matricula.estudiante.grado }}</option> }
         </select>
+        @if (errorEstudiante) { <small class="campo-error" role="alert">{{ errorEstudiante }}</small> }
       </label>
-      <label>Curso
+      <label [class.invalido]="errorCurso">Curso
         <select name="curso" [(ngModel)]="curso" [disabled]="!dniEstudiante" required>
           <option value="" disabled>{{ dniEstudiante ? 'Selecciona un curso' : 'Primero selecciona un estudiante' }}</option>
           @for (cursoItem of cursosDisponibles(obtenerMatricula(dniEstudiante)?.estudiante?.grado ?? ''); track cursoItem) { <option [value]="cursoItem">{{ cursoItem }}</option> }
         </select>
+        @if (errorCurso) { <small class="campo-error" role="alert">{{ errorCurso }}</small> }
       </label>
-      <label>Nota <span class="nota-rango">0 a 20</span>
-        <input name="nota" [(ngModel)]="nota" required type="number" min="0" max="20" step="0.5" placeholder="Ej. 16" />
+      <label [class.invalido]="errorNota">Nota <span class="nota-rango">0 a 20</span>
+        <input name="nota" [(ngModel)]="nota" required type="number" min="0" max="20" step="0.5" placeholder="Ej. 16" [attr.aria-invalid]="errorNota ? 'true' : null" />
+        @if (errorNota) { <small class="campo-error" role="alert">{{ errorNota }}</small> }
       </label>
       <button type="submit" [disabled]="notaDuplicada || registrando">{{ registrando ? 'Guardando…' : '＋ Registrar nota' }}</button>
     </form>
@@ -38,9 +41,15 @@
             <tr>
               <td><strong>{{ obtenerMatricula(registro.dni) ? nombreEstudiante(obtenerMatricula(registro.dni)!) : 'Estudiante no disponible' }}</strong><small class="estudiante-dni">DNI {{ registro.dni }}</small></td>
               <td>{{ obtenerMatricula(registro.dni)?.estudiante?.grado }}</td><td>{{ registro.curso }}</td>
-              <td><strong [class.nota-desaprobada]="registro.nota < 13" [class.nota-aprobada]="registro.nota >= 13">{{ registro.nota }}</strong></td>
-              <td><span class="nota-estado" [class.estado-desaprobado]="registro.nota < 13" [class.estado-aprobado]="registro.nota >= 13">{{ registro.nota >= 13 ? 'Aprobado' : 'Desaprobado' }}</span></td>
-              <td><button type="button" class="nota-eliminar" (click)="eliminarNota(registro.id)">Eliminar</button></td>
+              <td><strong [class.nota-desaprobada]="registro.nota < notaMinima" [class.nota-aprobada]="registro.nota >= notaMinima">{{ registro.nota }}</strong></td>
+              <td><span class="nota-estado" [class.estado-desaprobado]="registro.nota < notaMinima" [class.estado-aprobado]="registro.nota >= notaMinima">{{ registro.nota >= notaMinima ? 'Aprobado' : 'Desaprobado' }}</span></td>
+              <td>
+                @if (confirmandoId === registro.id) {
+                  <span class="nota-confirmar">¿Eliminar? <button type="button" class="nota-si" (click)="eliminarNota(registro.id)">Sí</button><button type="button" class="nota-no" (click)="confirmandoId = null">No</button></span>
+                } @else {
+                  <button type="button" class="nota-eliminar" (click)="confirmandoId = registro.id">Eliminar</button>
+                }
+              </td>
             </tr>
           } @empty { <tr><td colspan="6" class="notas-vacias">No hay calificaciones para este filtro.</td></tr> }
         </tbody>

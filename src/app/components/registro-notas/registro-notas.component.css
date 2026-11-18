@@ -13,3 +13,16 @@
 .notas-error { margin: 0 0 14px; padding: 11px 14px; border: 1px solid #edc7ca; border-radius: 8px; background: #fff4f4; color: #8c1722; font-size: 13px; }
 @media (max-width: 850px) { .notas-contenido { width: min(100% - 40px, 700px); }.notas-formulario { grid-template-columns: repeat(2, minmax(0, 1fr)); }.notas-formulario button { width: 100%; } }
 @media (max-width: 540px) { .notas-pagina { padding: 25px 0 35px; }.notas-contenido { width: min(100% - 28px, 440px); }.notas-encabezado { align-items: stretch; flex-direction: column; }.notas-encabezado select { width: 100%; }.notas-formulario { grid-template-columns: 1fr; padding: 14px; gap: 12px; }.notas-formulario button { margin-top: 2px; } }
+/* Mensajes de validación */
+.notas-formulario { padding-bottom: 30px; }
+.notas-formulario label { position: relative; }
+.campo-error { position: absolute; top: 100%; left: 0; margin-top: 4px; color: #b3202a; font-size: 12px; font-weight: 600; line-height: 1.2; }
+.notas-formulario label.invalido select, .notas-formulario label.invalido input[type=number] { border-color: #b3202a !important; background: #fffafa; box-shadow: 0 0 0 3px #b3202a14; }
+@media (max-width: 850px) { .campo-error { position: static; margin-top: 2px; } }
+/* Confirmar eliminación */
+.nota-confirmar { display: inline-flex; align-items: center; gap: 6px; color: #565966; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.nota-confirmar button { padding: 4px 10px; border: 1px solid transparent; border-radius: 6px; font: 700 12px 'Public Sans', 'Segoe UI', sans-serif; cursor: pointer; }
+.nota-si { background: #a71f2b; color: #fff; }
+.nota-si:hover { background: #861923; }
+.nota-no { background: #f3f2f5; color: #565966; border-color: #e4e3e9 !important; }
+.nota-no:hover { background: #e9e8ec; }
